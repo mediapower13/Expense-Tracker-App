@@ -127,4 +127,70 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Charts Row -->
+            <div class="charts-grid">
+                <div class="card chart-card">
+                    <div class="card-header">
+                        <h3>Income vs Expenses Trend</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+                <div class="card chart-card">
+                    <div class="card-header">
+                        <h3>Monthly Overview</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="monthlyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Category Charts -->
+            <div class="charts-grid">
+                <div class="card chart-card">
+                    <div class="card-header">
+                        <h3>Expenses by Category</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="expenseCategoryChart"></canvas>
+                    </div>
+                </div>
+                <div class="card chart-card">
+                    <div class="card-header">
+                        <h3>Income by Source</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="incomeCategoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Transactions -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Recent Transactions</h3>
+                    <a href="#" class="view-all" data-tab="transactions">View All</a>
+                </div>
+                <div class="card-body">
+                    <div class="transactions-list" id="recentTransactions"></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Transactions View -->
+        <section class="view" id="transactionsView">
+            <div class="view-header">
+                <div class="header-content">
+                    <h1>Transactions</h1>
+                    <p>View and manage all your transactions</p>
+                </div>
+                <button class="btn btn-primary" id="addTransactionBtn2">
+                    <i data-lucide="plus"></i>
+                    Add Transaction
+                </button>
+            </div>
+            
  
