@@ -330,4 +330,62 @@
                 </div>
             </div>
         </section>
-      
+        
+        <!-- Settings View -->
+        <section class="view" id="settingsView">
+            <div class="view-header">
+                <div class="header-content">
+                    <h1>Settings</h1>
+                    <p>Manage your preferences</p>
+                </div>
+            </div>
+            
+            <div class="settings-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Categories</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="categories-list" id="categoriesList"></div>
+                        <button class="btn btn-secondary" id="addCategoryBtn">
+                            <i data-lucide="plus"></i>
+                            Add Category
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Data Management</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="settings-actions">
+                            <button class="btn btn-secondary" id="exportDataBtn">
+                                <i data-lucide="download"></i>
+                                Export Data
+                            </button>
+                            <button class="btn btn-secondary" id="importDataBtn">
+                                <i data-lucide="upload"></i>
+                                Import Data
+                            </button>
+                            <input type="file" id="importFileInput" accept=".json" style="display: none;">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>About</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="about-info">
+                            <p><strong>Expense Tracker</strong></p>
+                            <p>Version 1.0.0</p>
+                            <p>A professional expense tracking application with Python backend and Chart.js visualizations.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
