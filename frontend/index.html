@@ -49,3 +49,82 @@
             </button>
         </nav>
         
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="avatar">
+                    <i data-lucide="user"></i>
+                </div>
+                <div class="user-details">
+                    <span class="user-name">John Doe</span>
+                    <span class="user-email">john@example.com</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+    
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <button class="menu-toggle" id="menuToggle">
+            <i data-lucide="menu"></i>
+        </button>
+        <div class="mobile-logo">
+            <i data-lucide="wallet"></i>
+            <span>ExpenseTracker</span>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard View -->
+        <section class="view active" id="dashboardView">
+            <div class="view-header">
+                <div class="header-content">
+                    <h1>Dashboard</h1>
+                    <p>Track your income and expenses</p>
+                </div>
+                <button class="btn btn-primary" id="addTransactionBtn">
+                    <i data-lucide="plus"></i>
+                    Add Transaction
+                </button>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon balance">
+                        <i data-lucide="wallet"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Total Balance</span>
+                        <span class="stat-value" id="totalBalance">$0.00</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon income">
+                        <i data-lucide="trending-up"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Total Income</span>
+                        <span class="stat-value income-text" id="totalIncome">$0.00</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon expense">
+                        <i data-lucide="trending-down"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Total Expenses</span>
+                        <span class="stat-value expense-text" id="totalExpenses">$0.00</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon savings">
+                        <i data-lucide="piggy-bank"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Savings Rate</span>
+                        <span class="stat-value" id="savingsRate">0%</span>
+                    </div>
+                </div>
+            </div>
+ 
