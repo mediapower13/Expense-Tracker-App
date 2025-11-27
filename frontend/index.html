@@ -449,4 +449,41 @@
         </div>
     </div>
     
+    <!-- Category Modal -->
+    <div class="modal" id="categoryModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Category</h2>
+                <button class="modal-close" id="closeCategoryModal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <form id="categoryForm">
+                <div class="form-group">
+                    <label for="categoryName">Name</label>
+                    <input type="text" id="categoryName" required placeholder="Category name">
+                </div>
+                
+                <div class="form-group">
+                    <label>Type</label>
+                    <div class="type-toggle">
+                        <button type="button" class="type-btn cat-type active" data-type="expense">Expense</button>
+                        <button type="button" class="type-btn cat-type" data-type="income">Income</button>
+                    </div>
+                    <input type="hidden" id="categoryType" value="expense">
+                </div>
+                
+                <div class="form-group">
+                    <label for="categoryColor">Color</label>
+                    <input type="color" id="categoryColor" value="#10b981">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelCategory">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
     
