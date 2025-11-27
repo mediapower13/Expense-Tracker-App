@@ -396,8 +396,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Add Transaction</h2>
-                <button class="modal-close" id="closeModal">
+                <button class="modal-close" id="closeModal" title="Close" aria-label="Close">
                     <i data-lucide="x"></i>
+                    <span class="sr-only">Close</span>
                 </button>
             </div>
             <form id="transactionForm">
@@ -453,12 +454,13 @@
     <!-- Category Modal -->
     <div class="modal" id="categoryModal">
         <div class="modal-backdrop"></div>
-        <div class="modal-content">
             <div class="modal-header">
                 <h2>Add Category</h2>
-                <button class="modal-close" id="closeCategoryModal">
+                <button class="modal-close" id="closeCategoryModal" title="Close" aria-label="Close">
                     <i data-lucide="x"></i>
+                    <span class="sr-only">Close</span>
                 </button>
+            </div>
             </div>
             <form id="categoryForm">
                 <div class="form-group">
