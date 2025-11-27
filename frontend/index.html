@@ -209,4 +209,44 @@
                 </select>
             </div>
             
-   
+            <!-- Transactions Table -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="transactions-table-wrapper">
+                        <table class="transactions-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Category</th>
+                                    <th>Amount</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionsTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="empty-state" id="emptyTransactions" style="display: none;">
+                        <i data-lucide="inbox"></i>
+                        <h3>No transactions found</h3>
+                        <p>Start by adding your first transaction</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Reports View -->
+        <section class="view" id="reportsView">
+            <div class="view-header">
+                <div class="header-content">
+                    <h1>Financial Reports</h1>
+                    <p>Analyze your spending patterns</p>
+                </div>
+                <select id="reportPeriod" class="filter-select">
+                    <option value="week">Last 7 Days</option>
+                    <option value="month" selected>Last 30 Days</option>
+                    <option value="year">Last Year</option>
+                    <option value="all">All Time</option>
+                </select>
+            </div>
+         
