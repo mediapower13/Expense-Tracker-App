@@ -216,3 +216,39 @@ body {
   height: 24px;
   color: var(--accent-primary);
 }
+
+/*MAIN CONTENT*/
+.main-content {
+  margin-left: var(--sidebar-width);
+  min-height: 100vh;
+  padding: 32px;
+}
+
+.view {
+  display: none;
+}
+
+.view.active {
+  display: block;
+}
+
+.view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.header-content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.header-content p {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
