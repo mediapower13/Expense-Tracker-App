@@ -940,3 +940,32 @@ body {
   padding-top: 24px;
   border-top: 1px solid var(--border-color);
 }
+
+/*TOAST NOTIFICATION*/
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  background-color: var(--accent-primary);
+  color: white;
+  border-radius: var(--border-radius-sm);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all var(--transition-normal);
+  z-index: 300;
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.toast svg {
+  width: 20px;
+  height: 20px;
+}
