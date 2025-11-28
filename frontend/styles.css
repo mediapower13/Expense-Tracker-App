@@ -431,3 +431,118 @@ body {
 .chart-card canvas {
   max-height: 100%;
 }
+
+/* TRANSACTIONS LIST */
+.transactions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.transaction-item {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background-color: var(--bg-secondary);
+  border-radius: var(--border-radius-sm);
+  gap: 16px;
+  transition: background-color var(--transition-fast);
+}
+
+.transaction-item:hover {
+  background-color: var(--bg-hover);
+}
+
+.transaction-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--border-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.transaction-icon.income {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: var(--accent-income);
+}
+
+.transaction-icon.expense {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: var(--accent-expense);
+}
+
+.transaction-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.transaction-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.transaction-description {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.transaction-category {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.transaction-amount {
+  font-size: 16px;
+  font-weight: 600;
+  text-align: right;
+}
+
+.transaction-amount.income {
+  color: var(--accent-income);
+}
+
+.transaction-amount.expense {
+  color: var(--accent-expense);
+}
+
+.transaction-date {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: right;
+  min-width: 80px;
+}
+
+.transaction-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: var(--border-radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.action-btn:hover {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+}
+
+.action-btn.delete:hover {
+  color: var(--accent-expense);
+}
+
+.action-btn svg {
+  width: 18px;
+  height: 18px;
+}
