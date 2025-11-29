@@ -17,3 +17,16 @@ const state = {
     category: "all",
   },
 }
+
+// Chart.js default configuration
+Chart.defaults.color = "#a0a0a8"
+Chart.defaults.borderColor = "#2a2a36"
+Chart.defaults.font.family = "'Inter', sans-serif"
+
+// Lucide icon library
+const lucide = {
+  createIcons: () => {
+    // Dummy implementation for illustration purposes
+    console.log("Icons created")
+  },
+}
