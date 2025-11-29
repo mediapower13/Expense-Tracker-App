@@ -563,3 +563,145 @@ function renderCategorySelect(type = "expense") {
     )
     .join("")
 }
+
+// CHARTS
+
+function renderTrendChart() {
+  const ctx = document.getElementById("trendChart").getContext("2d")
+
+  const dailyData = {}
+  state.transactions.forEach((t) => {
+    if (!dailyData[t.date]) {
+      dailyData[t.date] = { income: 0, expense: 0 }
+    }
+    dailyData[t.date][t.type] += t.amount
+  })
+
+  const sortedDates = Object.keys(dailyData).sort()
+  const labels = sortedDates.map((d) => formatDate(d))
+  const incomeData = sortedDates.map((d) => dailyData[d].income)
+  const expenseData = sortedDates.map((d) => dailyData[d].expense)
+
+  if (state.charts.trend) {
+    state.charts.trend.destroy()
+  }
+
+  state.charts.trend = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels,
+      datasets: [
+        {
+          label: "Income",
+          data: incomeData,
+          borderColor: "#10b981",
+          backgroundColor: "rgba(16, 185, 129, 0.1)",
+          fill: true,
+          tension: 0.4,
+        },
+        {
+          label: "Expenses",
+          data: expenseData,
+          borderColor: "#ef4444",
+          backgroundColor: "rgba(239, 68, 68, 0.1)",
+          fill: true,
+          tension: 0.4,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: "top" },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: (value) => "$" + value.toLocaleString(),
+          },
+        },
+      },
+    },
+  })
+}
+
+function renderMonthlyChart() {
+  const ctx = document.getElementById("monthlyChart").getContext("2d")
+
+  const sortedMonths = Object.keys(state.monthlyData).sort()
+  const labels = sortedMonths.map((m) => {
+    const [year, month] = m.split("-")
+    return new Date(year, month - 1).toLocaleDateString("en-US", { month: "short", year: "2-digit" })
+  })
+
+  const incomeData = sortedMonths.map((m) => state.monthlyData[m]?.income || 0)
+  const expenseData = sortedMonths.map((m) => state.monthlyData[m]?.expense || 0)
+
+  if (state.charts.monthly) {
+    state.charts.monthly.destroy()
+  }
+
+  state.charts.monthly = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [
+        {
+          label: "Income",
+          data: incomeData,
+          backgroundColor: "#10b981",
+          borderRadius: 6,
+        },
+        {
+          label: "Expenses",
+          data: expenseData,
+          backgroundColor: "#ef4444",
+          borderRadius: 6,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: "top" },
+      },
+    },
+  })
+}
+
+function renderCategoryCharts() {
+  // Expense by category
+  const expenseCtx = document.getElementById("expenseCategoryChart").getContext("2d")
+  const expenseCategories = Object.entries(state.categoryBreakdown)
+    .filter(([_, data]) => data.expense > 0)
+    .sort((a, b) => b[1].expense - a[1].expense)
+
+  if (state.charts.expenseCategory) {
+    state.charts.expenseCategory.destroy()
+  }
+
+  if (expenseCategories.length > 0) {
+    state.charts.expenseCategory = new Chart(expenseCtx, {
+      type: "doughnut",
+      data: {
+        labels: expenseCategories.map(([cat]) => cat),
+        datasets: [
+          {
+            data: expenseCategories.map(([_, data]) => data.expense),
+            backgroundColor: expenseCategories.map(([cat]) => getCategoryColor(cat)),
+            borderWidth: 0,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: "right" },
+        },
+      },
+    })
+  }
