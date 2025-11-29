@@ -14,7 +14,6 @@ import { TransactionsList } from "@/components/dashboard/transactions-list"
 import { ReportsView } from "@/components/dashboard/reports-view"
 import { SettingsView } from "@/components/dashboard/settings-view"
 import type { Transaction, Category } from "@/lib/store"
-import { redirect } from "next/navigation"
 
 interface TransactionsData {
   transactions: Transaction[]
@@ -31,8 +30,6 @@ interface TransactionsData {
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 export default function ExpenseTrackerApp() {
-  redirect("/index.html")
-
   const [activeTab, setActiveTab] = useState("dashboard")
   const [showForm, setShowForm] = useState(false)
   const [categories, setCategories] = useState<Category[]>([])

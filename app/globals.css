@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+/* Removed unsupported @custom-variant rule; use Tailwind's built-in `dark:` variant (with `darkMode: 'class'` in tailwind.config.js) or the .dark selector directly in CSS. */
 
 /* <CHANGE> Dark finance theme with emerald accent for income, red for expenses */
 :root {
@@ -79,7 +79,7 @@
   --sidebar-ring: oklch(0.72 0.19 160);
 }
 
-@theme inline {
+:root {
   --font-sans: "Geist", "Geist Fallback";
   --font-mono: "Geist Mono", "Geist Mono Fallback";
   --color-background: var(--background);
@@ -126,9 +126,12 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    border-color: var(--color-border);
+    outline-color: var(--color-ring);
+    outline-offset: 0px;
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
   }
 }
