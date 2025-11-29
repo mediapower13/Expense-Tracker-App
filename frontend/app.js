@@ -858,3 +858,134 @@ function renderAll() {
   renderMonthlyChart()
   renderCategoryCharts()
 }
+
+// EVENT HANDLERS
+
+function switchTab(tabName) {
+  document.querySelectorAll(".nav-item").forEach((item) => {
+    item.classList.toggle("active", item.dataset.tab === tabName)
+  })
+
+  document.querySelectorAll(".view").forEach((view) => {
+    view.classList.toggle("active", view.id === `${tabName}View`)
+  })
+
+  document.getElementById("sidebar").classList.remove("active")
+
+  if (tabName === "reports") {
+    renderReports(document.getElementById("reportPeriod").value)
+  }
+}
+
+function openTransactionModal() {
+  document.getElementById("transactionModal").classList.add("active")
+  document.getElementById("transactionDate").value = new Date().toISOString().split("T")[0]
+  renderCategorySelect("expense")
+}
+
+function closeTransactionModal() {
+  document.getElementById("transactionModal").classList.remove("active")
+  document.getElementById("transactionForm").reset()
+  document.getElementById("transactionType").value = "expense"
+  document.querySelectorAll(".type-btn:not(.cat-type)").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.type === "expense")
+  })
+}
+
+function openCategoryModal() {
+  document.getElementById("categoryModal").classList.add("active")
+}
+
+function closeCategoryModal() {
+  document.getElementById("categoryModal").classList.remove("active")
+  document.getElementById("categoryForm").reset()
+}
+
+async function handleTransactionSubmit(e) {
+  e.preventDefault()
+
+  const transaction = {
+    type: document.getElementById("transactionType").value,
+    amount: Number.parseFloat(document.getElementById("transactionAmount").value),
+    category: document.getElementById("transactionCategory").value,
+    description: document.getElementById("transactionDescription").value,
+    date: document.getElementById("transactionDate").value,
+  }
+
+  await addTransaction(transaction)
+  closeTransactionModal()
+}
+
+async function handleCategorySubmit(e) {
+  e.preventDefault()
+
+  const category = {
+    name: document.getElementById("categoryName").value,
+    type: document.getElementById("categoryType").value,
+    color: document.getElementById("categoryColor").value,
+    icon: "circle",
+  }
+
+  await addCategory(category)
+  closeCategoryModal()
+}
+
+async function handleDeleteTransaction(id) {
+  if (confirm("Are you sure you want to delete this transaction?")) {
+    await deleteTransaction(id)
+  }
+}
+
+function showToast(message) {
+  const toast = document.getElementById("toast")
+  document.getElementById("toastMessage").textContent = message
+  toast.classList.add("show")
+
+  setTimeout(() => {
+    toast.classList.remove("show")
+  }, 3000)
+}
+
+function escapeHtml(text) {
+  const div = document.createElement("div")
+  div.textContent = text
+  return div.innerHTML
+}
+
+function exportData() {
+  const data = {
+    transactions: state.transactions,
+    categories: state.categories,
+    exported_at: new Date().toISOString(),
+  }
+
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement("a")
+  a.href = url
+  a.download = `expense-tracker-export-${new Date().toISOString().split("T")[0]}.json`
+  a.click()
+  URL.revokeObjectURL(url)
+  showToast("Data exported successfully!")
+}
+
+function importData(file) {
+  const reader = new FileReader()
+  reader.onload = async (e) => {
+    try {
+      const data = JSON.parse(e.target.result)
+      if (data.transactions && data.categories) {
+        state.transactions = data.transactions
+        state.categories = data.categories
+        recalculateSummary()
+        renderAll()
+        showToast("Data imported successfully!")
+      } else {
+        throw new Error("Invalid data format")
+      }
+    } catch (error) {
+      alert("Failed to import data. Please check the file format.")
+    }
+  }
+  reader.readAsText(file)
+}
