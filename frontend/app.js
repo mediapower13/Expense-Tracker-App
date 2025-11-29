@@ -810,3 +810,21 @@ async function renderReports(period = "month") {
       },
     })
   }
+
+  // Top expenses
+  const topExpensesContainer = document.getElementById("topExpenses")
+  topExpensesContainer.innerHTML =
+    (data.top_expenses || [])
+      .map(
+        (t, i) => `
+      <div class="top-item">
+        <span class="top-item-rank">${i + 1}</span>
+        <div class="top-item-details">
+          <div class="top-item-description">${escapeHtml(t.description)}</div>
+          <div class="top-item-category">${escapeHtml(t.category)}</div>
+        </div>
+        <span class="top-item-amount expense-text">${formatCurrency(t.amount)}</span>
+      </div>
+    `,
+      )
+      .join("") || '<p class="empty-state">No expenses in this period</p>'
