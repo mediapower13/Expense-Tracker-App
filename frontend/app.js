@@ -319,3 +319,73 @@ function recalculateSummary() {
     }
     state.categoryBreakdown[t.category].count++
   })
+
+  // Monthly data
+  state.monthlyData = {}
+  state.transactions.forEach((t) => {
+    const month = t.date.substring(0, 7)
+    if (!state.monthlyData[month]) {
+      state.monthlyData[month] = { income: 0, expense: 0 }
+    }
+    if (t.type === "income") {
+      state.monthlyData[month].income += t.amount
+    } else {
+      state.monthlyData[month].expense += t.amount
+    }
+  })
+}
+
+function calculateLocalReports(period) {
+  const today = new Date()
+  let startDate
+
+  switch (period) {
+    case "week":
+      startDate = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000)
+      break
+    case "month":
+      startDate = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000)
+      break
+    case "year":
+      startDate = new Date(today.getTime() - 365 * 24 * 60 * 60 * 1000)
+      break
+    default:
+      startDate = new Date("1970-01-01")
+  }
+
+  const filtered = state.transactions.filter((t) => new Date(t.date) >= startDate)
+
+  const totalIncome = filtered.filter((t) => t.type === "income").reduce((s, t) => s + t.amount, 0)
+  const totalExpenses = filtered.filter((t) => t.type === "expense").reduce((s, t) => s + t.amount, 0)
+
+  const categoryBreakdown = {}
+  filtered.forEach((t) => {
+    if (!categoryBreakdown[t.category]) {
+      categoryBreakdown[t.category] = { income: 0, expense: 0, count: 0 }
+    }
+    categoryBreakdown[t.category][t.type] += t.amount
+    categoryBreakdown[t.category].count++
+  })
+
+  const expenses = filtered.filter((t) => t.type === "expense").sort((a, b) => b.amount - a.amount)
+  const income = filtered.filter((t) => t.type === "income").sort((a, b) => b.amount - a.amount)
+
+  return {
+    period,
+    summary: {
+      total_income: totalIncome,
+      total_expenses: totalExpenses,
+      balance: totalIncome - totalExpenses,
+      savings_rate: totalIncome > 0 ? (((totalIncome - totalExpenses) / totalIncome) * 100).toFixed(1) : 0,
+    },
+    category_breakdown: categoryBreakdown,
+    top_expenses: expenses.slice(0, 5),
+    top_income: income.slice(0, 5),
+  }
+}
+
+async function refreshData() {
+  await fetchTransactions()
+  renderAll()
+}
+
