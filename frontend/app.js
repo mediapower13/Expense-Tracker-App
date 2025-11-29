@@ -705,3 +705,108 @@ function renderCategoryCharts() {
       },
     })
   }
+
+  // Income by category
+  const incomeCtx = document.getElementById("incomeCategoryChart").getContext("2d")
+  const incomeCategories = Object.entries(state.categoryBreakdown)
+    .filter(([_, data]) => data.income > 0)
+    .sort((a, b) => b[1].income - a[1].income)
+
+  if (state.charts.incomeCategory) {
+    state.charts.incomeCategory.destroy()
+  }
+
+  if (incomeCategories.length > 0) {
+    state.charts.incomeCategory = new Chart(incomeCtx, {
+      type: "doughnut",
+      data: {
+        labels: incomeCategories.map(([cat]) => cat),
+        datasets: [
+          {
+            data: incomeCategories.map(([_, data]) => data.income),
+            backgroundColor: incomeCategories.map(([cat]) => getCategoryColor(cat)),
+            borderWidth: 0,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: "right" },
+        },
+      },
+    })
+  }
+}
+
+async function renderReports(period = "month") {
+  const data = await fetchReports(period)
+
+  document.getElementById("reportIncome").textContent = formatCurrency(data.summary?.total_income || 0)
+  document.getElementById("reportExpenses").textContent = formatCurrency(data.summary?.total_expenses || 0)
+  document.getElementById("reportNet").textContent = formatCurrency(data.summary?.balance || 0)
+  document.getElementById("reportSavingsRate").textContent = `${data.summary?.savings_rate || 0}%`
+
+  const expenseCtx = document.getElementById("reportExpenseChart").getContext("2d")
+  const incomeCtx = document.getElementById("reportIncomeChart").getContext("2d")
+
+  const breakdown = data.category_breakdown || {}
+
+  const expenseData = Object.entries(breakdown)
+    .filter(([_, d]) => d.expense > 0)
+    .sort((a, b) => b[1].expense - a[1].expense)
+
+  const incomeData = Object.entries(breakdown)
+    .filter(([_, d]) => d.income > 0)
+    .sort((a, b) => b[1].income - a[1].income)
+
+  if (state.charts.reportExpense) {
+    state.charts.reportExpense.destroy()
+  }
+
+  if (expenseData.length > 0) {
+    state.charts.reportExpense = new Chart(expenseCtx, {
+      type: "doughnut",
+      data: {
+        labels: expenseData.map(([cat]) => cat),
+        datasets: [
+          {
+            data: expenseData.map(([_, d]) => d.expense),
+            backgroundColor: expenseData.map(([cat]) => getCategoryColor(cat)),
+            borderWidth: 0,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: "right" } },
+      },
+    })
+  }
+
+  if (state.charts.reportIncome) {
+    state.charts.reportIncome.destroy()
+  }
+
+  if (incomeData.length > 0) {
+    state.charts.reportIncome = new Chart(incomeCtx, {
+      type: "doughnut",
+      data: {
+        labels: incomeData.map(([cat]) => cat),
+        datasets: [
+          {
+            data: incomeData.map(([_, d]) => d.income),
+            backgroundColor: incomeData.map(([cat]) => getCategoryColor(cat)),
+            borderWidth: 0,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: "right" } },
+      },
+    })
+  }
