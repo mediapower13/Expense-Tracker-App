@@ -389,3 +389,177 @@ async function refreshData() {
   renderAll()
 }
 
+// UI RENDERING
+
+function formatCurrency(amount) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(amount)
+}
+
+function formatDate(dateString) {
+  return new Date(dateString).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  })
+}
+
+function getCategoryColor(categoryName) {
+  const category = state.categories.find((c) => c.name === categoryName)
+  return category?.color || "#71717a"
+}
+
+function getCategoryIcon(categoryName) {
+  const category = state.categories.find((c) => c.name === categoryName)
+  return category?.icon || "circle"
+}
+
+function renderStats() {
+  document.getElementById("totalBalance").textContent = formatCurrency(state.summary.balance || 0)
+  document.getElementById("totalIncome").textContent = formatCurrency(state.summary.total_income || 0)
+  document.getElementById("totalExpenses").textContent = formatCurrency(state.summary.total_expenses || 0)
+  document.getElementById("savingsRate").textContent = `${state.summary.savings_rate || 0}%`
+}
+
+function renderRecentTransactions() {
+  const container = document.getElementById("recentTransactions")
+  const recent = state.transactions.slice(0, 5)
+
+  if (recent.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <i data-lucide="inbox"></i>
+        <h3>No transactions yet</h3>
+        <p>Add your first transaction to get started</p>
+      </div>
+    `
+    lucide.createIcons()
+    return
+  }
+
+  container.innerHTML = recent
+    .map(
+      (t) => `
+      <div class="transaction-item">
+        <div class="transaction-icon ${t.type}">
+          <i data-lucide="${t.type === "income" ? "arrow-up" : "arrow-down"}"></i>
+        </div>
+        <div class="transaction-details">
+          <div class="transaction-description">${escapeHtml(t.description)}</div>
+          <div class="transaction-category">${escapeHtml(t.category)}</div>
+        </div>
+        <div class="transaction-amount ${t.type}">
+          ${t.type === "income" ? "+" : "-"}${formatCurrency(t.amount)}
+        </div>
+        <div class="transaction-date">${formatDate(t.date)}</div>
+      </div>
+    `,
+    )
+    .join("")
+
+  lucide.createIcons()
+}
+
+function renderTransactionsTable() {
+  const tbody = document.getElementById("transactionsTableBody")
+  const emptyState = document.getElementById("emptyTransactions")
+
+  let filtered = [...state.transactions]
+
+  if (state.filters.search) {
+    const search = state.filters.search.toLowerCase()
+    filtered = filtered.filter(
+      (t) => t.description.toLowerCase().includes(search) || t.category.toLowerCase().includes(search),
+    )
+  }
+
+  if (state.filters.type !== "all") {
+    filtered = filtered.filter((t) => t.type === state.filters.type)
+  }
+
+  if (state.filters.category !== "all") {
+    filtered = filtered.filter((t) => t.category === state.filters.category)
+  }
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = ""
+    emptyState.style.display = "block"
+    lucide.createIcons()
+    return
+  }
+
+  emptyState.style.display = "none"
+
+  tbody.innerHTML = filtered
+    .map(
+      (t) => `
+      <tr>
+        <td>${formatDate(t.date)}</td>
+        <td>${escapeHtml(t.description)}</td>
+        <td>
+          <span class="category-badge" style="background-color: ${getCategoryColor(t.category)}20; color: ${getCategoryColor(t.category)}">
+            ${escapeHtml(t.category)}
+          </span>
+        </td>
+        <td class="${t.type === "income" ? "income-text" : "expense-text"}">
+          ${t.type === "income" ? "+" : "-"}${formatCurrency(t.amount)}
+        </td>
+        <td>
+          <button class="action-btn delete" onclick="handleDeleteTransaction('${t.id}')" title="Delete">
+            <i data-lucide="trash-2"></i>
+          </button>
+        </td>
+      </tr>
+    `,
+    )
+    .join("")
+
+  lucide.createIcons()
+}
+
+function renderCategoryFilter() {
+  const select = document.getElementById("categoryFilter")
+  const uniqueCategories = [...new Set(state.transactions.map((t) => t.category))]
+
+  select.innerHTML = `
+    <option value="all">All Categories</option>
+    ${uniqueCategories
+      .map(
+        (cat) => `
+      <option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>
+    `,
+      )
+      .join("")}
+  `
+}
+
+function renderCategories() {
+  const container = document.getElementById("categoriesList")
+
+  container.innerHTML = state.categories
+    .map(
+      (c) => `
+      <div class="category-item">
+        <span class="category-color" style="background-color: ${c.color}"></span>
+        <span class="category-name">${escapeHtml(c.name)}</span>
+        <span class="category-type">${c.type}</span>
+      </div>
+    `,
+    )
+    .join("")
+}
+
+function renderCategorySelect(type = "expense") {
+  const select = document.getElementById("transactionCategory")
+  const filteredCategories = state.categories.filter((c) => c.type === type)
+
+  select.innerHTML = filteredCategories
+    .map(
+      (c) => `
+      <option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>
+    `,
+    )
+    .join("")
+}
