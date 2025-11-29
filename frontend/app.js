@@ -150,3 +150,158 @@ async function addCategory(category) {
     return mockCategory
   }
 }
+
+// DATA HELPERS
+
+function getDefaultCategories() {
+  return [
+    { id: "1", name: "Salary", type: "income", color: "#10b981", icon: "wallet" },
+    { id: "2", name: "Freelance", type: "income", color: "#06b6d4", icon: "laptop" },
+    { id: "3", name: "Investments", type: "income", color: "#8b5cf6", icon: "trending-up" },
+    { id: "4", name: "Other Income", type: "income", color: "#f59e0b", icon: "gift" },
+    { id: "5", name: "Food & Dining", type: "expense", color: "#ef4444", icon: "utensils" },
+    { id: "6", name: "Transportation", type: "expense", color: "#f97316", icon: "car" },
+    { id: "7", name: "Shopping", type: "expense", color: "#ec4899", icon: "shopping-bag" },
+    { id: "8", name: "Bills & Utilities", type: "expense", color: "#6366f1", icon: "file-text" },
+    { id: "9", name: "Entertainment", type: "expense", color: "#14b8a6", icon: "film" },
+    { id: "10", name: "Healthcare", type: "expense", color: "#f43f5e", icon: "heart-pulse" },
+    { id: "11", name: "Education", type: "expense", color: "#3b82f6", icon: "book-open" },
+    { id: "12", name: "Other Expense", type: "expense", color: "#71717a", icon: "package" },
+  ]
+}
+
+function getMockData() {
+  const transactions = [
+    {
+      id: "1",
+      type: "income",
+      amount: 5000,
+      category: "Salary",
+      description: "Monthly salary",
+      date: "2025-11-01",
+      created_at: "2025-11-01T09:00:00Z",
+    },
+    {
+      id: "2",
+      type: "income",
+      amount: 1200,
+      category: "Freelance",
+      description: "Web project",
+      date: "2025-11-05",
+      created_at: "2025-11-05T14:30:00Z",
+    },
+    {
+      id: "3",
+      type: "expense",
+      amount: 150,
+      category: "Food & Dining",
+      description: "Grocery shopping",
+      date: "2025-11-03",
+      created_at: "2025-11-03T10:15:00Z",
+    },
+    {
+      id: "4",
+      type: "expense",
+      amount: 80,
+      category: "Transportation",
+      description: "Gas refill",
+      date: "2025-11-04",
+      created_at: "2025-11-04T16:00:00Z",
+    },
+    {
+      id: "5",
+      type: "expense",
+      amount: 200,
+      category: "Bills & Utilities",
+      description: "Electricity bill",
+      date: "2025-11-06",
+      created_at: "2025-11-06T11:00:00Z",
+    },
+    {
+      id: "6",
+      type: "expense",
+      amount: 50,
+      category: "Entertainment",
+      description: "Movie tickets",
+      date: "2025-11-08",
+      created_at: "2025-11-08T19:30:00Z",
+    },
+    {
+      id: "7",
+      type: "income",
+      amount: 300,
+      category: "Investments",
+      description: "Dividend payout",
+      date: "2025-11-10",
+      created_at: "2025-11-10T08:00:00Z",
+    },
+    {
+      id: "8",
+      type: "expense",
+      amount: 120,
+      category: "Shopping",
+      description: "New clothes",
+      date: "2025-11-12",
+      created_at: "2025-11-12T15:45:00Z",
+    },
+    {
+      id: "9",
+      type: "expense",
+      amount: 45,
+      category: "Healthcare",
+      description: "Pharmacy",
+      date: "2025-11-14",
+      created_at: "2025-11-14T09:30:00Z",
+    },
+    {
+      id: "10",
+      type: "expense",
+      amount: 250,
+      category: "Education",
+      description: "Online course",
+      date: "2025-11-15",
+      created_at: "2025-11-15T12:00:00Z",
+    },
+    {
+      id: "11",
+      type: "income",
+      amount: 800,
+      category: "Freelance",
+      description: "Design work",
+      date: "2025-11-18",
+      created_at: "2025-11-18T14:00:00Z",
+    },
+    {
+      id: "12",
+      type: "expense",
+      amount: 180,
+      category: "Food & Dining",
+      description: "Restaurant dinner",
+      date: "2025-11-20",
+      created_at: "2025-11-20T20:00:00Z",
+    },
+  ]
+
+  state.transactions = transactions
+  recalculateSummary()
+
+  return {
+    transactions,
+    summary: state.summary,
+    categoryBreakdown: state.categoryBreakdown,
+    monthlyData: state.monthlyData,
+  }
+}
+
+function recalculateSummary() {
+  const totalIncome = state.transactions.filter((t) => t.type === "income").reduce((sum, t) => sum + t.amount, 0)
+
+  const totalExpenses = state.transactions.filter((t) => t.type === "expense").reduce((sum, t) => sum + t.amount, 0)
+
+  state.summary = {
+    total_income: totalIncome,
+    total_expenses: totalExpenses,
+    balance: totalIncome - totalExpenses,
+    transaction_count: state.transactions.length,
+    savings_rate: totalIncome > 0 ? (((totalIncome - totalExpenses) / totalIncome) * 100).toFixed(1) : 0,
+  }
