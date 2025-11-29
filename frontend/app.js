@@ -305,3 +305,17 @@ function recalculateSummary() {
     transaction_count: state.transactions.length,
     savings_rate: totalIncome > 0 ? (((totalIncome - totalExpenses) / totalIncome) * 100).toFixed(1) : 0,
   }
+
+  // Category breakdown
+  state.categoryBreakdown = {}
+  state.transactions.forEach((t) => {
+    if (!state.categoryBreakdown[t.category]) {
+      state.categoryBreakdown[t.category] = { income: 0, expense: 0, count: 0 }
+    }
+    if (t.type === "income") {
+      state.categoryBreakdown[t.category].income += t.amount
+    } else {
+      state.categoryBreakdown[t.category].expense += t.amount
+    }
+    state.categoryBreakdown[t.category].count++
+  })
