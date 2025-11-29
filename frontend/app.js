@@ -989,3 +989,99 @@ function importData(file) {
   }
   reader.readAsText(file)
 }
+
+// INITIALIZATION
+
+document.addEventListener("DOMContentLoaded", async () => {
+  lucide.createIcons()
+
+  await fetchCategories()
+  await fetchTransactions()
+
+  renderAll()
+
+  // Navigation
+  document.querySelectorAll(".nav-item").forEach((item) => {
+    item.addEventListener("click", () => switchTab(item.dataset.tab))
+  })
+
+  document.querySelectorAll(".view-all").forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault()
+      switchTab(link.dataset.tab)
+    })
+  })
+
+  // Mobile menu
+  document.getElementById("menuToggle").addEventListener("click", () => {
+    document.getElementById("sidebar").classList.toggle("active")
+  })
+
+  // Transaction modal
+  document.getElementById("addTransactionBtn").addEventListener("click", openTransactionModal)
+  document.getElementById("addTransactionBtn2").addEventListener("click", openTransactionModal)
+  document.getElementById("closeModal").addEventListener("click", closeTransactionModal)
+  document.getElementById("cancelTransaction").addEventListener("click", closeTransactionModal)
+  document.querySelector("#transactionModal .modal-backdrop").addEventListener("click", closeTransactionModal)
+  document.getElementById("transactionForm").addEventListener("submit", handleTransactionSubmit)
+
+  // Type toggle for transaction
+  document.querySelectorAll(".type-btn:not(.cat-type)").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".type-btn:not(.cat-type)").forEach((b) => b.classList.remove("active"))
+      btn.classList.add("active")
+      document.getElementById("transactionType").value = btn.dataset.type
+      renderCategorySelect(btn.dataset.type)
+    })
+  })
+
+  // Category modal
+  document.getElementById("addCategoryBtn").addEventListener("click", openCategoryModal)
+  document.getElementById("closeCategoryModal").addEventListener("click", closeCategoryModal)
+  document.getElementById("cancelCategory").addEventListener("click", closeCategoryModal)
+  document.querySelector("#categoryModal .modal-backdrop").addEventListener("click", closeCategoryModal)
+  document.getElementById("categoryForm").addEventListener("submit", handleCategorySubmit)
+
+  // Type toggle for category
+  document.querySelectorAll(".type-btn.cat-type").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".type-btn.cat-type").forEach((b) => b.classList.remove("active"))
+      btn.classList.add("active")
+      document.getElementById("categoryType").value = btn.dataset.type
+    })
+  })
+
+  // Filters
+  document.getElementById("searchInput").addEventListener("input", (e) => {
+    state.filters.search = e.target.value
+    renderTransactionsTable()
+  })
+
+  document.getElementById("typeFilter").addEventListener("change", (e) => {
+    state.filters.type = e.target.value
+    renderTransactionsTable()
+  })
+
+  document.getElementById("categoryFilter").addEventListener("change", (e) => {
+    state.filters.category = e.target.value
+    renderTransactionsTable()
+  })
+
+  // Report period
+  document.getElementById("reportPeriod").addEventListener("change", (e) => {
+    renderReports(e.target.value)
+  })
+
+  // Export/Import
+  document.getElementById("exportDataBtn").addEventListener("click", exportData)
+  document.getElementById("importDataBtn").addEventListener("click", () => {
+    document.getElementById("importFileInput").click()
+  })
+  document.getElementById("importFileInput").addEventListener("change", (e) => {
+    if (e.target.files[0]) {
+      importData(e.target.files[0])
+    }
+  })
+
+  lucide.createIcons()
+})
