@@ -100,7 +100,7 @@ export default function ExpenseTrackerApp() {
           },
           [] as Array<{ date: string; income: number; expense: number }>,
         )
-        .sort((a, b) => a.date.localeCompare(b.date))
+        .sort((a: { date: string }, b: { date: string }) => a.date.localeCompare(b.date))
     : []
 
   const expenseByCategory = data?.transactions
