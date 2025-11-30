@@ -1,8 +1,3 @@
-"""
-Expense Tracker Backend - Flask API Server
-A professional REST API for managing income and expenses
-"""
-
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datetime import datetime, timedelta
