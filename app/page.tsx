@@ -84,7 +84,7 @@ export default function ExpenseTrackerApp() {
   const dailyTrendData = data?.transactions
     ? data.transactions
         .reduce(
-          (acc, t) => {
+          (acc: Array<{ date: string; income: number; expense: number }>, t: Transaction) => {
             const existing = acc.find((d) => d.date === t.date)
             if (existing) {
               if (t.type === "income") existing.income += t.amount
@@ -105,9 +105,9 @@ export default function ExpenseTrackerApp() {
 
   const expenseByCategory = data?.transactions
     ? data.transactions
-        .filter((t) => t.type === "expense")
+        .filter((t: Transaction) => t.type === "expense")
         .reduce(
-          (acc, t) => {
+          (acc: Record<string, number>, t: Transaction) => {
             acc[t.category] = (acc[t.category] || 0) + t.amount
             return acc
           },
@@ -117,9 +117,9 @@ export default function ExpenseTrackerApp() {
 
   const incomeByCategory = data?.transactions
     ? data.transactions
-        .filter((t) => t.type === "income")
+        .filter((t: Transaction) => t.type === "income")
         .reduce(
-          (acc, t) => {
+          (acc: Record<string, number>, t: Transaction) => {
             acc[t.category] = (acc[t.category] || 0) + t.amount
             return acc
           },
