@@ -17,7 +17,7 @@ export function MonthlyBarChart({ data }: MonthlyBarChartProps) {
       <h3 className="text-lg font-semibold text-card-foreground mb-4">Monthly Overview</h3>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
           <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
           <YAxis stroke="hsl(var(--muted-foreground))" />
           <Tooltip
@@ -25,11 +25,13 @@ export function MonthlyBarChart({ data }: MonthlyBarChartProps) {
               backgroundColor: "hsl(var(--card))",
               border: "1px solid hsl(var(--border))",
               borderRadius: "8px",
+              color: "hsl(var(--card-foreground))",
             }}
+            labelStyle={{ color: "hsl(var(--card-foreground))" }}
           />
-          <Legend />
-          <Bar dataKey="income" fill="hsl(var(--success))" />
-          <Bar dataKey="expense" fill="hsl(var(--destructive))" />
+          <Legend wrapperStyle={{ color: "hsl(var(--card-foreground))" }} />
+          <Bar dataKey="income" fill="#10b981" name="Income" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="expense" fill="#ef4444" name="Expense" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
