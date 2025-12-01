@@ -29,7 +29,8 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className="fixed top-4 left-4 z-50 lg:hidden p-2 rounded-lg bg-sidebar text-sidebar-foreground border border-sidebar-border"
+        className="fixed top-4 right-4 z-50 lg:hidden p-2 rounded-lg bg-sidebar text-sidebar-foreground border border-sidebar-border shadow-lg"
+        aria-label="Toggle menu"
       >
         {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
       </button>
