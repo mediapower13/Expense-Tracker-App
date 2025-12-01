@@ -45,7 +45,7 @@ export function TransactionForm({ categories, onSubmit, onClose, isModal = false
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-card-foreground">Add Transaction</h2>
           {isModal && (
-            <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
+            <button onClick={onClose} aria-label="Close" title="Close" className="text-muted-foreground hover:text-foreground">
               <X className="h-5 w-5" />
             </button>
           )}

@@ -13,6 +13,7 @@ import { TransactionForm } from "@/components/dashboard/transaction-form"
 import { TransactionsList } from "@/components/dashboard/transactions-list"
 import { ReportsView } from "@/components/dashboard/reports-view"
 import { SettingsView } from "@/components/dashboard/settings-view"
+import { ThemeToggle } from "@/components/theme-toggle"
 import type { Transaction, Category } from "@/lib/store"
 
 interface TransactionsData {
@@ -166,10 +167,13 @@ export default function ExpenseTrackerApp() {
             <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
             <p className="text-muted-foreground">Track your income and expenses</p>
           </div>
-          <Button onClick={() => setShowForm(true)} className="bg-primary hover:bg-primary/90 text-primary-foreground">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Transaction
-          </Button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <Button onClick={() => setShowForm(true)} className="bg-primary hover:bg-primary/90 text-primary-foreground">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Transaction
+            </Button>
+          </div>
         </div>
 
         {/* Stats Cards */}

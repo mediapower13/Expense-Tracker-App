@@ -1,49 +1,48 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* Removed unsupported @custom-variant rule; use Tailwind's built-in `dark:` variant (with `darkMode: 'class'` in tailwind.config.js) or the .dark selector directly in CSS. */
-
-/* <CHANGE> Dark finance theme with emerald accent for income, red for expenses */
+/* Light theme - Clean and professional */
 :root {
-  --background: oklch(0.13 0.01 260);
-  --foreground: oklch(0.95 0 0);
-  --card: oklch(0.17 0.01 260);
-  --card-foreground: oklch(0.95 0 0);
-  --popover: oklch(0.17 0.01 260);
-  --popover-foreground: oklch(0.95 0 0);
-  --primary: oklch(0.72 0.19 160);
-  --primary-foreground: oklch(0.13 0.01 260);
-  --secondary: oklch(0.22 0.01 260);
-  --secondary-foreground: oklch(0.95 0 0);
-  --muted: oklch(0.22 0.01 260);
-  --muted-foreground: oklch(0.65 0 0);
-  --accent: oklch(0.72 0.19 160);
-  --accent-foreground: oklch(0.13 0.01 260);
+  --background: oklch(0.98 0 0);
+  --foreground: oklch(0.15 0.01 260);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0.01 260);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0.01 260);
+  --primary: oklch(0.62 0.19 160);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.92 0.01 260);
+  --secondary-foreground: oklch(0.15 0.01 260);
+  --muted: oklch(0.94 0.01 260);
+  --muted-foreground: oklch(0.45 0 0);
+  --accent: oklch(0.92 0.01 260);
+  --accent-foreground: oklch(0.15 0.01 260);
   --destructive: oklch(0.55 0.22 25);
-  --destructive-foreground: oklch(0.95 0 0);
-  --success: oklch(0.72 0.19 160);
-  --success-foreground: oklch(0.13 0.01 260);
-  --warning: oklch(0.8 0.15 85);
-  --warning-foreground: oklch(0.13 0.01 260);
-  --border: oklch(0.28 0.01 260);
-  --input: oklch(0.22 0.01 260);
-  --ring: oklch(0.72 0.19 160);
-  --chart-1: oklch(0.72 0.19 160);
+  --destructive-foreground: oklch(0.98 0 0);
+  --success: oklch(0.62 0.19 160);
+  --success-foreground: oklch(0.98 0 0);
+  --warning: oklch(0.7 0.15 85);
+  --warning-foreground: oklch(0.15 0.01 260);
+  --border: oklch(0.88 0.01 260);
+  --input: oklch(0.92 0.01 260);
+  --ring: oklch(0.62 0.19 160);
+  --chart-1: oklch(0.62 0.19 160);
   --chart-2: oklch(0.55 0.22 25);
-  --chart-3: oklch(0.65 0.18 250);
-  --chart-4: oklch(0.8 0.15 85);
-  --chart-5: oklch(0.7 0.2 320);
+  --chart-3: oklch(0.55 0.18 250);
+  --chart-4: oklch(0.7 0.15 85);
+  --chart-5: oklch(0.6 0.2 320);
   --radius: 0.75rem;
-  --sidebar: oklch(0.15 0.01 260);
-  --sidebar-foreground: oklch(0.95 0 0);
-  --sidebar-primary: oklch(0.72 0.19 160);
-  --sidebar-primary-foreground: oklch(0.13 0.01 260);
-  --sidebar-accent: oklch(0.22 0.01 260);
-  --sidebar-accent-foreground: oklch(0.95 0 0);
-  --sidebar-border: oklch(0.28 0.01 260);
-  --sidebar-ring: oklch(0.72 0.19 160);
+  --sidebar: oklch(0.97 0.01 260);
+  --sidebar-foreground: oklch(0.15 0.01 260);
+  --sidebar-primary: oklch(0.62 0.19 160);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.92 0.01 260);
+  --sidebar-accent-foreground: oklch(0.15 0.01 260);
+  --sidebar-border: oklch(0.88 0.01 260);
+  --sidebar-ring: oklch(0.62 0.19 160);
 }
 
+/* Dark theme - Finance theme with emerald accent */
 .dark {
   --background: oklch(0.13 0.01 260);
   --foreground: oklch(0.95 0 0);
