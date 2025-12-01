@@ -9,11 +9,13 @@ interface CategoryChartProps {
 }
 
 const COLORS = [
-  "hsl(160, 70%, 50%)",
-  "hsl(25, 70%, 50%)",
-  "hsl(250, 70%, 50%)",
-  "hsl(85, 70%, 50%)",
-  "hsl(320, 70%, 50%)",
+  "#10b981", // emerald-500
+  "#3b82f6", // blue-500
+  "#f59e0b", // amber-500
+  "#8b5cf6", // violet-500
+  "#ec4899", // pink-500
+  "#14b8a6", // teal-500
+  "#f97316", // orange-500
 ]
 
 export function CategoryChart({ data, title }: CategoryChartProps) {
@@ -36,6 +38,8 @@ export function CategoryChart({ data, title }: CategoryChartProps) {
             outerRadius={80}
             fill="#8884d8"
             dataKey="value"
+            stroke="hsl(var(--background))"
+            strokeWidth={2}
           >
             {chartData.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -46,9 +50,10 @@ export function CategoryChart({ data, title }: CategoryChartProps) {
               backgroundColor: "hsl(var(--card))",
               border: "1px solid hsl(var(--border))",
               borderRadius: "8px",
+              color: "hsl(var(--card-foreground))",
             }}
           />
-          <Legend />
+          <Legend wrapperStyle={{ color: "hsl(var(--card-foreground))" }} />
         </PieChart>
       </ResponsiveContainer>
     </div>
