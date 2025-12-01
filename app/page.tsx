@@ -160,18 +160,19 @@ export default function ExpenseTrackerApp() {
 
     // Dashboard view
     return (
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
-            <p className="text-muted-foreground">Track your income and expenses</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-foreground">Dashboard</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">Track your income and expenses</p>
           </div>
           <div className="flex items-center gap-2">
             <ThemeToggle />
-            <Button onClick={() => setShowForm(true)} className="bg-primary hover:bg-primary/90 text-primary-foreground">
+            <Button onClick={() => setShowForm(true)} className="bg-primary hover:bg-primary/90 text-primary-foreground text-sm sm:text-base">
               <Plus className="h-4 w-4 mr-2" />
-              Add Transaction
+              <span className="hidden xs:inline">Add Transaction</span>
+              <span className="xs:hidden">Add</span>
             </Button>
           </div>
         </div>
@@ -185,13 +186,13 @@ export default function ExpenseTrackerApp() {
         />
 
         {/* Charts Row 1 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           <IncomeExpenseChart data={dailyTrendData} />
           <MonthlyBarChart data={data?.monthlyData || {}} />
         </div>
 
         {/* Charts Row 2 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {Object.keys(expenseByCategory).length > 0 && (
             <CategoryChart data={expenseByCategory} title="Expense by Category" type="expense" />
           )}
@@ -201,15 +202,18 @@ export default function ExpenseTrackerApp() {
         </div>
 
         {/* Recent Transactions */}
-        <TransactionsList transactions={(data?.transactions || []).slice(0, 10)} onDelete={handleDeleteTransaction} />
+        <div>
+          <h2 className="text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4">Recent Transactions</h2>
+          <TransactionsList transactions={(data?.transactions || []).slice(0, 10)} onDelete={handleDeleteTransaction} />
+        </div>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="text-destructive">Failed to load data. Please try again.</p>
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <p className="text-sm sm:text-base text-destructive text-center">Failed to load data. Please try again.</p>
       </div>
     )
   }
@@ -220,7 +224,7 @@ export default function ExpenseTrackerApp() {
 
       {/* Main Content */}
       <main className="lg:ml-64 min-h-screen">
-        <div className="p-4 sm:p-6 lg:p-8 pt-16 lg:pt-8">
+        <div className="p-3 sm:p-4 md:p-6 lg:p-8 pt-16 lg:pt-8">
           {isLoading ? (
             <div className="flex items-center justify-center h-64">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
