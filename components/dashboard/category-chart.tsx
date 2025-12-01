@@ -27,8 +27,9 @@ export function CategoryChart({ data, title }: CategoryChartProps) {
   return (
     <div className="bg-card rounded-lg border border-border p-4 sm:p-6">
       <h3 className="text-base sm:text-lg font-semibold text-card-foreground mb-4">{title}</h3>
-      <ResponsiveContainer width="100%" height={250}>
-        <PieChart>
+      <div className="h-[250px] sm:h-[300px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
           <Pie
             data={chartData}
             cx="50%"
@@ -56,7 +57,8 @@ export function CategoryChart({ data, title }: CategoryChartProps) {
           />
           <Legend wrapperStyle={{ color: "hsl(var(--card-foreground))", fontSize: "14px" }} />
         </PieChart>
-      </ResponsiveContainer>
+        </ResponsiveContainer>
+      </div>
     </div>
   )
 }

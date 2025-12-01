@@ -15,8 +15,9 @@ export function MonthlyBarChart({ data }: MonthlyBarChartProps) {
   return (
     <div className="bg-card rounded-lg border border-border p-4 sm:p-6">
       <h3 className="text-base sm:text-lg font-semibold text-card-foreground mb-4">Monthly Overview</h3>
-      <ResponsiveContainer width="100%" height={250}>
-        <BarChart data={chartData}>
+      <div className="h-[250px] sm:h-[300px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
           <XAxis 
             dataKey="month" 
@@ -43,7 +44,8 @@ export function MonthlyBarChart({ data }: MonthlyBarChartProps) {
           <Bar dataKey="income" fill="#10b981" name="Income" radius={[4, 4, 0, 0]} />
           <Bar dataKey="expense" fill="#ef4444" name="Expense" radius={[4, 4, 0, 0]} />
         </BarChart>
-      </ResponsiveContainer>
+        </ResponsiveContainer>
+      </div>
     </div>
   )
 }
