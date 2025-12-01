@@ -56,6 +56,8 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
             <button
               onClick={() => setIsMobileMenuOpen(false)}
               className="lg:hidden text-sidebar-foreground"
+              aria-label="Close menu"
+              title="Close menu"
             >
               <X className="h-5 w-5" />
             </button>

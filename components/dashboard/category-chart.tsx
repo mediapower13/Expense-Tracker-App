@@ -27,7 +27,7 @@ export function CategoryChart({ data, title }: CategoryChartProps) {
   return (
     <div className="bg-card rounded-lg border border-border p-4 sm:p-6">
       <h3 className="text-base sm:text-lg font-semibold text-card-foreground mb-4">{title}</h3>
-      <ResponsiveContainer width="100%" height={250} className="sm:!h-[300px]">
+      <ResponsiveContainer width="100%" height={250}>
         <PieChart>
           <Pie
             data={chartData}

@@ -59,7 +59,7 @@ export function StatsCards({ totalIncome, totalExpenses, balance, transactionCou
                 <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">{stat.title}</p>
                 <p className="text-xl sm:text-2xl font-bold text-card-foreground mt-1 sm:mt-2 truncate">{stat.value}</p>
               </div>
-              <div className={`${stat.bgColor} p-2 sm:p-3 rounded-lg flex-shrink-0 ml-2`}>
+              <div className={`${stat.bgColor} p-2 sm:p-3 rounded-lg shrink-0 ml-2`}>
                 <Icon className={`h-5 w-5 sm:h-6 sm:w-6 ${stat.color}`} />
               </div>
             </div>
