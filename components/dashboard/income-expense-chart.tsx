@@ -13,32 +13,32 @@ export function IncomeExpenseChart({ data }: IncomeExpenseChartProps) {
       <div className="h-[250px] sm:h-[300px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
-          <XAxis 
-            dataKey="date" 
-            stroke="hsl(var(--muted-foreground))" 
-            fontSize={12}
-            className="sm:text-sm"
-          />
-          <YAxis 
-            stroke="hsl(var(--muted-foreground))" 
-            fontSize={12}
-            className="sm:text-sm"
-          />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: "hsl(var(--card))",
-              border: "1px solid hsl(var(--border))",
-              borderRadius: "8px",
-              color: "hsl(var(--card-foreground))",
-              fontSize: "14px",
-            }}
-            labelStyle={{ color: "hsl(var(--card-foreground))" }}
-          />
-          <Legend wrapperStyle={{ color: "hsl(var(--card-foreground))", fontSize: "14px" }} />
-          <Line type="monotone" dataKey="income" stroke="#10b981" strokeWidth={3} name="Income" dot={{ fill: "#10b981", r: 4 }} />
-          <Line type="monotone" dataKey="expense" stroke="#ef4444" strokeWidth={3} name="Expense" dot={{ fill: "#ef4444", r: 4 }} />
-        </LineChart>
+        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+        <XAxis 
+          dataKey="date" 
+          stroke="hsl(var(--muted-foreground))" 
+          fontSize={12}
+          className="sm:text-sm"
+        />
+        <YAxis 
+          stroke="hsl(var(--muted-foreground))" 
+          fontSize={12}
+          className="sm:text-sm"
+        />
+        <Tooltip
+          contentStyle={{
+            backgroundColor: "hsl(var(--card))",
+            border: "1px solid hsl(var(--border))",
+            borderRadius: "8px",
+            color: "hsl(var(--card-foreground))",
+            fontSize: "14px",
+          }}
+          labelStyle={{ color: "hsl(var(--card-foreground))" }}
+        />
+        <Legend wrapperStyle={{ color: "hsl(var(--card-foreground))", fontSize: "14px" }} />
+        <Line type="monotone" dataKey="income" stroke="#10b981" strokeWidth={3} name="Income" dot={{ fill: "#10b981", r: 4 }} />
+        <Line type="monotone" dataKey="expense" stroke="#ef4444" strokeWidth={3} name="Expense" dot={{ fill: "#ef4444", r: 4 }} />
+          </LineChart>
         </ResponsiveContainer>
       </div>
     </div>
