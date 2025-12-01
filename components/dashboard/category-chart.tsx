@@ -25,9 +25,9 @@ export function CategoryChart({ data, title }: CategoryChartProps) {
   }))
 
   return (
-    <div className="bg-card rounded-lg border border-border p-6">
-      <h3 className="text-lg font-semibold text-card-foreground mb-4">{title}</h3>
-      <ResponsiveContainer width="100%" height={300}>
+    <div className="bg-card rounded-lg border border-border p-4 sm:p-6">
+      <h3 className="text-base sm:text-lg font-semibold text-card-foreground mb-4">{title}</h3>
+      <ResponsiveContainer width="100%" height={250} className="sm:!h-[300px]">
         <PieChart>
           <Pie
             data={chartData}
@@ -35,7 +35,7 @@ export function CategoryChart({ data, title }: CategoryChartProps) {
             cy="50%"
             labelLine={false}
             label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-            outerRadius={80}
+            outerRadius={window.innerWidth < 640 ? 60 : 80}
             fill="#8884d8"
             dataKey="value"
             stroke="hsl(var(--background))"
@@ -51,9 +51,10 @@ export function CategoryChart({ data, title }: CategoryChartProps) {
               border: "1px solid hsl(var(--border))",
               borderRadius: "8px",
               color: "hsl(var(--card-foreground))",
+              fontSize: "14px",
             }}
           />
-          <Legend wrapperStyle={{ color: "hsl(var(--card-foreground))" }} />
+          <Legend wrapperStyle={{ color: "hsl(var(--card-foreground))", fontSize: "14px" }} />
         </PieChart>
       </ResponsiveContainer>
     </div>
