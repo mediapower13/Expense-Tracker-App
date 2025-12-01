@@ -19,70 +19,72 @@ export function TransactionsList({ transactions, onDelete }: TransactionsListPro
 
   if (transactions.length === 0) {
     return (
-      <div className="bg-card rounded-lg border border-border p-8 text-center">
-        <p className="text-muted-foreground">No transactions yet. Add your first transaction to get started!</p>
+      <div className="bg-card rounded-lg border border-border p-6 sm:p-8 text-center">
+        <p className="text-sm sm:text-base text-muted-foreground">No transactions yet. Add your first transaction to get started!</p>
       </div>
     )
   }
 
   return (
-    <div className="bg-card rounded-lg border border-border overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-muted">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Date
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Description
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Category
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Type
-              </th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Amount
-              </th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border">
-            {transactions.map((transaction) => (
-              <tr key={transaction.id} className="hover:bg-muted/50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-card-foreground">
-                  {new Date(transaction.date).toLocaleDateString()}
-                </td>
-                <td className="px-6 py-4 text-sm text-card-foreground">{transaction.description}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-card-foreground">{transaction.category}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <div className="flex items-center gap-1">
-                    {transaction.type === "income" ? (
-                      <>
-                        <TrendingUp className="h-4 w-4 text-success" />
-                        <span className="text-success">Income</span>
-                      </>
-                    ) : (
-                      <>
-                        <TrendingDown className="h-4 w-4 text-destructive" />
-                        <span className="text-destructive">Expense</span>
-                      </>
-                    )}
-                  </div>
-                </td>
-                <td
-                  className={`px-6 py-4 whitespace-nowrap text-sm text-right font-medium ${
-                    transaction.type === "income" ? "text-success" : "text-destructive"
-                  }`}
+    <>
+      {/* Desktop Table View */}
+      <div className="hidden md:block bg-card rounded-lg border border-border overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-muted">
+              <tr>
+                <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  Date
+                </th>
+                <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  Description
+                </th>
+                <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  Category
+                </th>
+                <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  Type
+                </th>
+                <th className="px-4 lg:px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  Amount
+                </th>
+                <th className="px-4 lg:px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {transactions.map((transaction) => (
+                <tr key={transaction.id} className="hover:bg-muted/50">
+                  <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-card-foreground">
+                    {new Date(transaction.date).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 lg:px-6 py-4 text-sm text-card-foreground">{transaction.description}</td>
+                  <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-card-foreground">{transaction.category}</td>
+                  <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm">
+                    <div className="flex items-center gap-1">
+                      {transaction.type === "income" ? (
+                        <>
+                          <TrendingUp className="h-4 w-4 text-success" />
+                          <span className="text-success">Income</span>
+                        </>
+                      ) : (
+                        <>
+                          <TrendingDown className="h-4 w-4 text-destructive" />
+                          <span className="text-destructive">Expense</span>
+                        </>
+                      )}
+                    </div>
+                  </td>
+                  <td
+                    className={`px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-right font-medium ${
+                      transaction.type === "income" ? "text-success" : "text-destructive"
+                    }`}
                 >
                   {transaction.type === "income" ? "+" : "-"}
                   {formatCurrency(transaction.amount)}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-right text-sm">
                   <Button
                     variant="ghost"
                     size="icon"
@@ -98,5 +100,54 @@ export function TransactionsList({ transactions, onDelete }: TransactionsListPro
         </table>
       </div>
     </div>
+
+      {/* Mobile Card View */}
+      <div className="md:hidden space-y-3">
+        {transactions.map((transaction) => (
+          <div key={transaction.id} className="bg-card rounded-lg border border-border p-4 hover:shadow-md transition-shadow">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-card-foreground truncate">{transaction.description}</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {new Date(transaction.date).toLocaleDateString()}
+                </p>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => onDelete(transaction.id)}
+                className="text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                {transaction.type === "income" ? (
+                  <div className="flex items-center gap-1 text-success">
+                    <TrendingUp className="h-4 w-4" />
+                    <span className="text-xs font-medium">Income</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1 text-destructive">
+                    <TrendingDown className="h-4 w-4" />
+                    <span className="text-xs font-medium">Expense</span>
+                  </div>
+                )}
+                <span className="text-xs text-muted-foreground">• {transaction.category}</span>
+              </div>
+              <p
+                className={`text-base font-bold ${
+                  transaction.type === "income" ? "text-success" : "text-destructive"
+                }`}
+              >
+                {transaction.type === "income" ? "+" : "-"}
+                {formatCurrency(transaction.amount)}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
   )
 }
