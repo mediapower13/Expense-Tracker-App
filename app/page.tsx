@@ -161,19 +161,27 @@ export default function ExpenseTrackerApp() {
     // Dashboard view
     return (
       <div className="space-y-4 sm:space-y-6">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
-          <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-foreground">Dashboard</h1>
-            <p className="text-sm sm:text-base text-muted-foreground">Track your income and expenses</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <Button onClick={() => setShowForm(true)} className="bg-primary hover:bg-primary/90 text-primary-foreground text-sm sm:text-base">
-              <Plus className="h-4 w-4 mr-2" />
-              <span className="hidden xs:inline">Add Transaction</span>
-              <span className="xs:hidden">Add</span>
-            </Button>
+        {/* Header - Redesigned */}
+        <div className="bg-gradient-to-br from-card via-card to-card/95 rounded-2xl border border-border p-6 sm:p-8 shadow-lg">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-2">
+              <h1 className="text-2xl sm:text-3xl font-bold text-foreground bg-clip-text">Dashboard</h1>
+              <p className="text-sm sm:text-base text-muted-foreground flex items-center gap-2">
+                <span className="inline-block h-2 w-2 rounded-full bg-success animate-pulse"></span>
+                Track your income and expenses in real-time
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <ThemeToggle />
+              <Button 
+                onClick={() => setShowForm(true)} 
+                className="bg-primary hover:bg-primary/90 text-primary-foreground text-sm sm:text-base shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                <span className="hidden xs:inline">Add Transaction</span>
+                <span className="xs:hidden">Add</span>
+              </Button>
+            </div>
           </div>
         </div>
 
