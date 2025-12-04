@@ -162,7 +162,7 @@ export default function ExpenseTrackerApp() {
     return (
       <div className="space-y-4 sm:space-y-6">
         {/* Header - Redesigned */}
-        <div className="bg-gradient-to-br from-card via-card to-card/95 rounded-2xl border border-border p-6 sm:p-8 shadow-lg">
+        <div className="bg-linear-to-br from-card via-card to-card/95 rounded-2xl border border-border p-6 sm:p-8 shadow-lg">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="space-y-2">
               <h1 className="text-2xl sm:text-3xl font-bold text-foreground bg-clip-text">Dashboard</h1>
