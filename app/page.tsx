@@ -140,18 +140,20 @@ export default function ExpenseTrackerApp() {
     if (activeTab === "transactions") {
       return (
         <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold text-foreground">All Transactions</h2>
-              <p className="text-muted-foreground">View and manage your transactions</p>
+          <div className="bg-linear-to-br from-card via-card to-card/95 rounded-2xl border border-border p-6 sm:p-8 shadow-lg">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-2">
+                <h2 className="text-2xl sm:text-3xl font-bold text-foreground">All Transactions</h2>
+                <p className="text-sm sm:text-base text-muted-foreground">View and manage your financial transactions</p>
+              </div>
+              <Button
+                onClick={() => setShowForm(true)}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Transaction
+              </Button>
             </div>
-            <Button
-              onClick={() => setShowForm(true)}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Transaction
-            </Button>
           </div>
           <TransactionsList transactions={data?.transactions || []} onDelete={handleDeleteTransaction} />
         </div>
