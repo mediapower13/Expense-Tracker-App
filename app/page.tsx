@@ -223,8 +223,8 @@ export default function ExpenseTrackerApp() {
       <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
 
       {/* Main Content */}
-      <main className="lg:ml-64 min-h-screen">
-        <div className="p-3 sm:p-4 md:p-6 lg:p-8 pt-20 lg:pt-8">
+      <main className="lg:ml-72 min-h-screen">
+        <div className="p-3 sm:p-4 md:p-6 lg:p-8 pt-24 lg:pt-8">
           {isLoading ? (
             <div className="flex items-center justify-center h-64">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
