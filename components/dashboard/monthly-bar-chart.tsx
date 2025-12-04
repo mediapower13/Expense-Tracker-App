@@ -13,8 +13,8 @@ export function MonthlyBarChart({ data }: MonthlyBarChartProps) {
   }))
 
   return (
-    <div className="bg-card rounded-lg border border-border p-4 sm:p-6">
-      <h3 className="text-base sm:text-lg font-semibold text-card-foreground mb-4">Monthly Overview</h3>
+    <div className="bg-card rounded-xl border border-border p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+      <h3 className="text-base sm:text-lg font-bold text-card-foreground mb-4">Monthly Overview</h3>
       <div className="h-[250px] sm:h-[300px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData}>
