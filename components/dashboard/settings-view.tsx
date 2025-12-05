@@ -58,6 +58,8 @@ export function SettingsView() {
               value={settings.name}
               onChange={(e) => setSettings({ ...settings, name: e.target.value })}
               className="w-full px-4 py-2 bg-input border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              placeholder="Enter your full name"
+              title="Full Name"
             />
           </div>
           <div>
@@ -67,6 +69,8 @@ export function SettingsView() {
               value={settings.email}
               onChange={(e) => setSettings({ ...settings, email: e.target.value })}
               className="w-full px-4 py-2 bg-input border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              placeholder="Enter your email address"
+              title="Email Address"
             />
           </div>
         </div>
@@ -94,6 +98,7 @@ export function SettingsView() {
               className={`relative w-12 h-6 rounded-full transition-colors ${
                 settings.notifications ? "bg-primary" : "bg-muted"
               }`}
+              aria-label="Toggle push notifications"
             >
               <span
                 className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${
@@ -112,6 +117,7 @@ export function SettingsView() {
               className={`relative w-12 h-6 rounded-full transition-colors ${
                 settings.emailAlerts ? "bg-primary" : "bg-muted"
               }`}
+              aria-label="Toggle email alerts"
             >
               <span
                 className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${
@@ -141,6 +147,7 @@ export function SettingsView() {
               value={settings.currency}
               onChange={(e) => setSettings({ ...settings, currency: e.target.value })}
               className="w-full px-4 py-2 bg-input border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              title="Select currency"
             >
               <option value="USD">USD - US Dollar</option>
               <option value="EUR">EUR - Euro</option>
@@ -154,6 +161,7 @@ export function SettingsView() {
               value={settings.language}
               onChange={(e) => setSettings({ ...settings, language: e.target.value })}
               className="w-full px-4 py-2 bg-input border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              title="Select language"
             >
               <option value="English">English</option>
               <option value="Spanish">Spanish</option>
