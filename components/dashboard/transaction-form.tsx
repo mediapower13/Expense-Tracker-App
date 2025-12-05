@@ -40,12 +40,17 @@ export function TransactionForm({ categories, onSubmit, onClose, isModal = false
   const filteredCategories = categories.filter((cat) => cat.type === type)
 
   return (
-    <div className={isModal ? "fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" : ""}>
-      <div className="bg-card rounded-lg border border-border p-4 sm:p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
+    <div className={isModal ? "fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200" : ""}>
+      <div className="bg-card rounded-xl border border-border shadow-2xl p-4 sm:p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-4 sm:mb-6">
-          <h2 className="text-lg sm:text-xl font-bold text-card-foreground">Add Transaction</h2>
+          <h2 className="text-lg sm:text-xl font-bold text-card-foreground">Add New Transaction</h2>
           {isModal && (
-            <button onClick={onClose} aria-label="Close" title="Close" className="text-muted-foreground hover:text-foreground">
+            <button 
+              onClick={onClose} 
+              aria-label="Close" 
+              title="Close" 
+              className="text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg p-2 transition-colors"
+            >
               <X className="h-5 w-5" />
             </button>
           )}
