@@ -19,8 +19,18 @@ export function TransactionsList({ transactions, onDelete }: TransactionsListPro
 
   if (transactions.length === 0) {
     return (
-      <div className="bg-card rounded-lg border border-border p-6 sm:p-8 text-center">
-        <p className="text-sm sm:text-base text-muted-foreground">No transactions yet. Add your first transaction to get started!</p>
+      <div className="bg-card rounded-xl border border-border p-8 sm:p-12 text-center shadow-lg">
+        <div className="flex flex-col items-center justify-center space-y-4">
+          <div className="p-4 rounded-full bg-muted/50">
+            <TrendingUp className="h-10 w-10 text-muted-foreground" />
+          </div>
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold text-card-foreground">No transactions yet</h3>
+            <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+              Add your first transaction to start tracking your expenses and income!
+            </p>
+          </div>
+        </div>
       </div>
     )
   }
