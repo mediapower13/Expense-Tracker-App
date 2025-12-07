@@ -25,8 +25,8 @@ export function CategoryChart({ data, title }: CategoryChartProps) {
   }))
 
   return (
-    <div className="bg-card rounded-xl border border-border p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300">
-      <h3 className="text-base sm:text-lg font-bold text-card-foreground mb-4">{title}</h3>
+    <div className="bg-card rounded-xl border border-border p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 group">
+      <h3 className="text-base sm:text-lg font-bold text-card-foreground mb-6 group-hover:text-primary transition-colors">{title}</h3>
       <div className="h-[250px] sm:h-[300px]">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
@@ -40,7 +40,7 @@ export function CategoryChart({ data, title }: CategoryChartProps) {
             fill="#8884d8"
             dataKey="value"
             stroke="hsl(var(--background))"
-            strokeWidth={2}
+            strokeWidth={3}
           >
             {chartData.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -50,12 +50,21 @@ export function CategoryChart({ data, title }: CategoryChartProps) {
             contentStyle={{
               backgroundColor: "hsl(var(--card))",
               border: "1px solid hsl(var(--border))",
-              borderRadius: "8px",
+              borderRadius: "12px",
+              boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
               color: "hsl(var(--card-foreground))",
               fontSize: "14px",
+              padding: "12px",
             }}
+            labelStyle={{ fontWeight: "600" }}
           />
-          <Legend wrapperStyle={{ color: "hsl(var(--card-foreground))", fontSize: "14px" }} />
+          <Legend 
+            wrapperStyle={{ 
+              color: "hsl(var(--card-foreground))", 
+              fontSize: "13px",
+              fontWeight: "500"
+            }} 
+          />
         </PieChart>
         </ResponsiveContainer>
       </div>
