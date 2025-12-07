@@ -89,16 +89,19 @@ export function TransactionForm({ categories, onSubmit, onClose, isModal = false
             <label htmlFor="amount" className="block text-xs sm:text-sm font-medium text-foreground mb-2">
               Amount
             </label>
-            <input
-              type="number"
-              id="amount"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              step="0.01"
-              required
-              className="w-full px-3 py-2 text-sm sm:text-base bg-input border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-              placeholder="0.00"
-            />
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-semibold">$</span>
+              <input
+                type="number"
+                id="amount"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                step="0.01"
+                required
+                className="w-full pl-8 pr-3 py-2 text-sm sm:text-base bg-input border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                placeholder="0.00"
+              />
+            </div>
           </div>
 
           <div>
@@ -109,7 +112,7 @@ export function TransactionForm({ categories, onSubmit, onClose, isModal = false
               id="category"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full px-3 py-2 text-sm sm:text-base bg-input border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full px-3 py-2 text-sm sm:text-base bg-input border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
             >
               <option value="">Select category</option>
               {filteredCategories.map((cat) => (
@@ -130,7 +133,7 @@ export function TransactionForm({ categories, onSubmit, onClose, isModal = false
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               required
-              className="w-full px-3 py-2 text-sm sm:text-base bg-input border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full px-3 py-2 text-sm sm:text-base bg-input border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
               placeholder="Enter description"
             />
           </div>
@@ -145,7 +148,7 @@ export function TransactionForm({ categories, onSubmit, onClose, isModal = false
               value={date}
               onChange={(e) => setDate(e.target.value)}
               required
-              className="w-full px-3 py-2 text-sm sm:text-base bg-input border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full px-3 py-2 text-sm sm:text-base bg-input border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
             />
           </div>
 
