@@ -236,8 +236,12 @@ export default function ExpenseTrackerApp() {
       <main className="lg:ml-72 min-h-screen">
         <div className="p-3 sm:p-4 md:p-6 lg:p-8 pt-24 lg:pt-8">
           {isLoading ? (
-            <div className="flex items-center justify-center h-64">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <div className="flex flex-col items-center justify-center h-64 space-y-4">
+              <div className="relative">
+                <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary/20"></div>
+                <div className="absolute top-0 left-0 animate-spin rounded-full h-16 w-16 border-4 border-transparent border-t-primary"></div>
+              </div>
+              <p className="text-sm text-muted-foreground animate-pulse">Loading your financial data...</p>
             </div>
           ) : (
             renderContent()
