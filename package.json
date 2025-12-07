@@ -2,11 +2,29 @@
   "name": "expense-tracker-app",
   "version": "1.0.0",
   "private": true,
+  "description": "Modern expense tracking application with analytics and reports",
+  "author": "mediapower13",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mediapower13/Expense-Tracker-App.git"
+  },
+  "keywords": [
+    "expense-tracker",
+    "finance",
+    "budget",
+    "nextjs",
+    "react",
+    "typescript"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md}\""
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
