@@ -2,7 +2,7 @@
 
 import { LayoutDashboard, List, FileText, Settings, X, Menu, Wallet } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 interface SidebarProps {
   activeTab: string
@@ -13,11 +13,31 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const menuItems = [
-    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { id: "transactions", label: "Transactions", icon: List },
-    { id: "reports", label: "Reports", icon: FileText },
-    { id: "settings", label: "Settings", icon: Settings },
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, shortcut: "1" },
+    { id: "transactions", label: "Transactions", icon: List, shortcut: "2" },
+    { id: "reports", label: "Reports", icon: FileText, shortcut: "3" },
+    { id: "settings", label: "Settings", icon: Settings, shortcut: "4" },
   ]
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.altKey) {
+        const item = menuItems.find(item => item.shortcut === e.key)
+        if (item) {
+          e.preventDefault()
+          onTabChange(item.id)
+        }
+      }
+      // Escape to close mobile menu
+      if (e.key === "Escape" && isMobileMenuOpen) {
+        setIsMobileMenuOpen(false)
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyPress)
+    return () => window.removeEventListener("keydown", handleKeyPress)
+  }, [isMobileMenuOpen, onTabChange])
 
   const handleTabChange = (tab: string) => {
     onTabChange(tab)
@@ -85,6 +105,7 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
                 <button
                   key={item.id}
                   onClick={() => handleTabChange(item.id)}
+                  title={`${item.label} (Alt+${item.shortcut})`}
                   className={cn(
                     "flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200",
                     "group relative overflow-hidden",
@@ -98,6 +119,7 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
                     isActive ? "scale-110" : "group-hover:scale-110"
                   )} />
                   <span className="flex-1 text-left">{item.label}</span>
+                  <span className="text-xs opacity-50 font-mono">Alt+{item.shortcut}</span>
                   {isActive && (
                     <div className="h-2 w-2 rounded-full bg-primary-foreground animate-pulse" />
                   )}
