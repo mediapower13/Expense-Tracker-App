@@ -129,8 +129,40 @@
     outline-color: var(--color-ring);
     outline-offset: 0px;
   }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+  }
+  
+  /* Custom scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--color-muted);
+    border-radius: 5px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 5px;
+    transition: background 0.2s;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(from var(--color-primary) calc(l * 0.9) c h);
+  }
+  
+  /* Firefox scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary) var(--color-muted);
   }
 }
