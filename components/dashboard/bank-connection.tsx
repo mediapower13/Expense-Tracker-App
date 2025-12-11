@@ -126,8 +126,9 @@ export function BankConnection() {
           <h3 className="text-lg font-semibold mb-4">Add New Bank Account</h3>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Bank Name</label>
+              <label htmlFor="bankName" className="block text-sm font-medium mb-2">Bank Name</label>
               <select
+                id="bankName"
                 value={formData.bankName}
                 onChange={(e) => setFormData({ ...formData, bankName: e.target.value })}
                 required
@@ -143,8 +144,9 @@ export function BankConnection() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Account Name</label>
+              <label htmlFor="accountName" className="block text-sm font-medium mb-2">Account Name</label>
               <input
+                id="accountName"
                 type="text"
                 value={formData.accountName}
                 onChange={(e) => setFormData({ ...formData, accountName: e.target.value })}
@@ -155,8 +157,9 @@ export function BankConnection() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Account Number (Last 4 digits)</label>
+              <label htmlFor="accountNumber" className="block text-sm font-medium mb-2">Account Number (Last 4 digits)</label>
               <input
+                id="accountNumber"
                 type="text"
                 value={formData.accountNumber}
                 onChange={(e) => setFormData({ ...formData, accountNumber: e.target.value })}
@@ -168,8 +171,9 @@ export function BankConnection() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Account Type</label>
+              <label htmlFor="accountType" className="block text-sm font-medium mb-2">Account Type</label>
               <select
+                id="accountType"
                 value={formData.accountType}
                 onChange={(e) => setFormData({ ...formData, accountType: e.target.value as any })}
                 className="w-full px-3 py-2 bg-input border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
@@ -182,12 +186,13 @@ export function BankConnection() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Current Balance</label>
+              <label htmlFor="balance" className="block text-sm font-medium mb-2">Current Balance</label>
               <input
+                id="balance"
                 type="number"
                 step="0.01"
                 value={formData.balance}
-                onChange={(e) => setFormData({ ...formData, balance: parseFloat(e.target.value) })}
+                onChange={(e) => setFormData({ ...formData, balance: parseFloat(e.target.value) || 0 })}
                 required
                 placeholder="0.00"
                 className="w-full px-3 py-2 bg-input border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
