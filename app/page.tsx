@@ -13,6 +13,8 @@ import { TransactionForm } from "@/components/dashboard/transaction-form"
 import { TransactionsList } from "@/components/dashboard/transactions-list"
 import { ReportsView } from "@/components/dashboard/reports-view"
 import { SettingsView } from "@/components/dashboard/settings-view"
+import { BankConnection } from "@/components/dashboard/bank-connection"
+import { BankSyncPanel } from "@/components/dashboard/bank-sync"
 import { ThemeToggle } from "@/components/theme-toggle"
 import type { Transaction, Category } from "@/lib/store"
 
@@ -135,6 +137,14 @@ export default function ExpenseTrackerApp() {
 
     if (activeTab === "settings") {
       return <SettingsView />
+    }
+
+    if (activeTab === "bank-accounts") {
+      return <BankConnection />
+    }
+
+    if (activeTab === "bank-sync") {
+      return <BankSyncPanel />
     }
 
     if (activeTab === "transactions") {
