@@ -26,6 +26,12 @@ class Transaction:
     date: str
     id: str = field(default_factory=lambda: str(uuid.uuid4()))
     created_at: str = field(default_factory=lambda: datetime.now().isoformat())
+    bank_account_id: Optional[str] = None
+    payment_method: Optional[Literal["cash", "credit_card", "debit_card", "bank_transfer", "mobile_payment", "other"]] = None
+    is_auto_sync: bool = False
+    bank_transaction_id: Optional[str] = None
+    merchant_name: Optional[str] = None
+    location: Optional[str] = None
     
     def to_dict(self) -> Dict:
         """Convert transaction to dictionary"""
@@ -36,7 +42,13 @@ class Transaction:
             "category": self.category,
             "description": self.description,
             "date": self.date,
-            "created_at": self.created_at
+            "created_at": self.created_at,
+            "bank_account_id": self.bank_account_id,
+            "payment_method": self.payment_method,
+            "is_auto_sync": self.is_auto_sync,
+            "bank_transaction_id": self.bank_transaction_id,
+            "merchant_name": self.merchant_name,
+            "location": self.location,
         }
     
     @classmethod
@@ -49,7 +61,13 @@ class Transaction:
             category=data["category"],
             description=data["description"],
             date=data["date"],
-            created_at=data.get("created_at", datetime.now().isoformat())
+            created_at=data.get("created_at", datetime.now().isoformat()),
+            bank_account_id=data.get("bank_account_id"),
+            payment_method=data.get("payment_method"),
+            is_auto_sync=data.get("is_auto_sync", False),
+            bank_transaction_id=data.get("bank_transaction_id"),
+            merchant_name=data.get("merchant_name"),
+            location=data.get("location"),
         )
     
     def is_income(self) -> bool:
@@ -187,3 +205,84 @@ class Report:
             "top_income": self.top_income,
             "transaction_count": self.transaction_count
         }
+
+
+@dataclass
+class BankAccount:
+    """Represents a linked bank account"""
+    bank_name: str
+    account_name: str
+    account_number: str
+    account_type: Literal["checking", "savings", "credit_card", "investment"]
+    balance: float
+    currency: str = "USD"
+    is_active: bool = True
+    id: str = field(default_factory=lambda: str(uuid.uuid4()))
+    linked_at: str = field(default_factory=lambda: datetime.now().isoformat())
+    last_synced_at: Optional[str] = None
+    
+    def to_dict(self) -> Dict:
+        """Convert bank account to dictionary"""
+        return {
+            "id": self.id,
+            "bank_name": self.bank_name,
+            "account_name": self.account_name,
+            "account_number": self.account_number,
+            "account_type": self.account_type,
+            "balance": self.balance,
+            "currency": self.currency,
+            "is_active": self.is_active,
+            "linked_at": self.linked_at,
+            "last_synced_at": self.last_synced_at,
+        }
+    
+    @classmethod
+    def from_dict(cls, data: Dict) -> "BankAccount":
+        """Create BankAccount from dictionary"""
+        return cls(
+            id=data.get("id", str(uuid.uuid4())),
+            bank_name=data["bank_name"],
+            account_name=data["account_name"],
+            account_number=data["account_number"],
+            account_type=data["account_type"],
+            balance=float(data.get("balance", 0)),
+            currency=data.get("currency", "USD"),
+            is_active=data.get("is_active", True),
+            linked_at=data.get("linked_at", datetime.now().isoformat()),
+            last_synced_at=data.get("last_synced_at"),
+        )
+
+
+@dataclass
+class BankSync:
+    """Represents a bank synchronization record"""
+    bank_account_id: str
+    status: Literal["pending", "syncing", "success", "failed"]
+    transactions_synced: int = 0
+    id: str = field(default_factory=lambda: str(uuid.uuid4()))
+    last_sync_time: Optional[str] = field(default_factory=lambda: datetime.now().isoformat())
+    error: Optional[str] = None
+    
+    def to_dict(self) -> Dict:
+        """Convert bank sync to dictionary"""
+        return {
+            "id": self.id,
+            "bank_account_id": self.bank_account_id,
+            "status": self.status,
+            "transactions_synced": self.transactions_synced,
+            "last_sync_time": self.last_sync_time,
+            "error": self.error,
+        }
+    
+    @classmethod
+    def from_dict(cls, data: Dict) -> "BankSync":
+        """Create BankSync from dictionary"""
+        return cls(
+            id=data.get("id", str(uuid.uuid4())),
+            bank_account_id=data["bank_account_id"],
+            status=data["status"],
+            transactions_synced=data.get("transactions_synced", 0),
+            last_sync_time=data.get("last_sync_time"),
+            error=data.get("error"),
+        )
+
