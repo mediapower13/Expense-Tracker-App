@@ -1,6 +1,6 @@
 "use client"
 
-import { LayoutDashboard, List, FileText, Settings, X, Menu, Wallet } from "lucide-react"
+import { LayoutDashboard, List, FileText, Settings, X, Menu, Wallet, Building2, RefreshCw } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useState, useEffect } from "react"
 
@@ -15,8 +15,10 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, shortcut: "1" },
     { id: "transactions", label: "Transactions", icon: List, shortcut: "2" },
-    { id: "reports", label: "Reports", icon: FileText, shortcut: "3" },
-    { id: "settings", label: "Settings", icon: Settings, shortcut: "4" },
+    { id: "bank-accounts", label: "Bank Accounts", icon: Building2, shortcut: "3", isNew: true },
+    { id: "bank-sync", label: "Bank Sync", icon: RefreshCw, shortcut: "4", isNew: true },
+    { id: "reports", label: "Reports", icon: FileText, shortcut: "5" },
+    { id: "settings", label: "Settings", icon: Settings, shortcut: "6" },
   ]
 
   // Keyboard shortcuts
@@ -119,6 +121,11 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
                     isActive ? "scale-110" : "group-hover:scale-110"
                   )} />
                   <span className="flex-1 text-left">{item.label}</span>
+                  {item.isNew && (
+                    <span className="px-1.5 py-0.5 text-[10px] font-bold rounded bg-success text-success-foreground">
+                      NEW
+                    </span>
+                  )}
                   <span className="text-xs opacity-50 font-mono">Alt+{item.shortcut}</span>
                   {isActive && (
                     <div className="h-2 w-2 rounded-full bg-primary-foreground animate-pulse" />
