@@ -1,9 +1,10 @@
 "use client"
 
-import { useState } from "react"
-import { X } from "lucide-react"
+import { useState, useEffect } from "react"
+import { X, Building2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import type { Category } from "@/lib/store"
+import { PAYMENT_METHODS } from "@/lib/bank-types"
+import type { Category, BankAccount } from "@/lib/store"
 
 interface TransactionFormProps {
   categories: Category[]
@@ -13,6 +14,10 @@ interface TransactionFormProps {
     category: string
     description: string
     date: string
+    bankAccountId?: string
+    paymentMethod?: string
+    merchantName?: string
+    location?: string
   }) => void
   onClose: () => void
   isModal?: boolean
@@ -24,6 +29,25 @@ export function TransactionForm({ categories, onSubmit, onClose, isModal = false
   const [category, setCategory] = useState("")
   const [description, setDescription] = useState("")
   const [date, setDate] = useState(new Date().toISOString().split("T")[0])
+  const [bankAccountId, setBankAccountId] = useState("")
+  const [paymentMethod, setPaymentMethod] = useState("")
+  const [merchantName, setMerchantName] = useState("")
+  const [location, setLocation] = useState("")
+  const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([])
+
+  useEffect(() => {
+    loadBankAccounts()
+  }, [])
+
+  const loadBankAccounts = async () => {
+    try {
+      const response = await fetch("/api/banks")
+      const data = await response.json()
+      setBankAccounts(data.accounts || [])
+    } catch (error) {
+      console.error("Failed to load bank accounts:", error)
+    }
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -33,6 +57,10 @@ export function TransactionForm({ categories, onSubmit, onClose, isModal = false
       category: category || (type === "expense" ? "Other" : "Other Income"),
       description,
       date,
+      bankAccountId: bankAccountId || undefined,
+      paymentMethod: paymentMethod || undefined,
+      merchantName: merchantName || undefined,
+      location: location || undefined,
     })
     onClose()
   }
@@ -150,6 +178,81 @@ export function TransactionForm({ categories, onSubmit, onClose, isModal = false
               required
               className="w-full px-3 py-2 text-sm sm:text-base bg-input border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
             />
+          </div>
+
+          <div className="border-t border-border pt-4">
+            <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+              <Building2 className="h-4 w-4" />
+              Payment Details (Optional)
+            </h4>
+            
+            <div className="space-y-3">
+              <div>
+                <label htmlFor="bankAccount" className="block text-xs sm:text-sm font-medium text-foreground mb-2">
+                  Bank Account
+                </label>
+                <select
+                  id="bankAccount"
+                  value={bankAccountId}
+                  onChange={(e) => setBankAccountId(e.target.value)}
+                  className="w-full px-3 py-2 text-sm sm:text-base bg-input border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                >
+                  <option value="">None (Cash)</option>
+                  {bankAccounts.filter((a) => a.isActive).map((account) => (
+                    <option key={account.id} value={account.id}>
+                      {account.accountName} - {account.bankName} (****{account.accountNumber})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="paymentMethod" className="block text-xs sm:text-sm font-medium text-foreground mb-2">
+                  Payment Method
+                </label>
+                <select
+                  id="paymentMethod"
+                  value={paymentMethod}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  className="w-full px-3 py-2 text-sm sm:text-base bg-input border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                >
+                  <option value="">Select method</option>
+                  {PAYMENT_METHODS.map((method) => (
+                    <option key={method.value} value={method.value}>
+                      {method.icon} {method.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="merchantName" className="block text-xs sm:text-sm font-medium text-foreground mb-2">
+                  Merchant Name
+                </label>
+                <input
+                  type="text"
+                  id="merchantName"
+                  value={merchantName}
+                  onChange={(e) => setMerchantName(e.target.value)}
+                  className="w-full px-3 py-2 text-sm sm:text-base bg-input border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                  placeholder="e.g., Walmart, Amazon"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="location" className="block text-xs sm:text-sm font-medium text-foreground mb-2">
+                  Location
+                </label>
+                <input
+                  type="text"
+                  id="location"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="w-full px-3 py-2 text-sm sm:text-base bg-input border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                  placeholder="e.g., New York, NY"
+                />
+              </div>
+            </div>
           </div>
 
           <div className="flex gap-2 pt-2 sm:pt-4">
