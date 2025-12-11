@@ -1,8 +1,9 @@
 "use client"
 
-import { Trash2, TrendingUp, TrendingDown } from "lucide-react"
+import { Trash2, TrendingUp, TrendingDown, Building2, CreditCard, Smartphone, Wallet, MapPin } from "lucide-react"
 import type { Transaction } from "@/lib/store"
 import { Button } from "@/components/ui/button"
+import { PAYMENT_METHODS } from "@/lib/bank-types"
 
 interface TransactionsListProps {
   transactions: Transaction[]
@@ -15,6 +16,29 @@ export function TransactionsList({ transactions, onDelete }: TransactionsListPro
       style: "currency",
       currency: "USD",
     }).format(amount)
+  }
+
+  const getPaymentIcon = (method?: string) => {
+    if (!method) return null
+    switch (method) {
+      case "credit_card":
+      case "debit_card":
+        return <CreditCard className="h-3.5 w-3.5" />
+      case "bank_transfer":
+        return <Building2 className="h-3.5 w-3.5" />
+      case "mobile_payment":
+        return <Smartphone className="h-3.5 w-3.5" />
+      case "cash":
+        return <Wallet className="h-3.5 w-3.5" />
+      default:
+        return <Wallet className="h-3.5 w-3.5" />
+    }
+  }
+
+  const getPaymentLabel = (method?: string) => {
+    if (!method) return null
+    const paymentMethod = PAYMENT_METHODS.find((m) => m.value === method)
+    return paymentMethod?.label || method
   }
 
   if (transactions.length === 0) {
@@ -53,6 +77,9 @@ export function TransactionsList({ transactions, onDelete }: TransactionsListPro
                   Category
                 </th>
                 <th className="px-4 lg:px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  Payment
+                </th>
+                <th className="px-4 lg:px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Type
                 </th>
                 <th className="px-4 lg:px-6 py-4 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wider">
@@ -69,11 +96,44 @@ export function TransactionsList({ transactions, onDelete }: TransactionsListPro
                   <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-card-foreground">
                     {new Date(transaction.date).toLocaleDateString()}
                   </td>
-                  <td className="px-4 lg:px-6 py-4 text-sm text-card-foreground font-medium">{transaction.description}</td>
+                  <td className="px-4 lg:px-6 py-4 text-sm text-card-foreground">
+                    <div className="font-medium">{transaction.description}</div>
+                    {transaction.merchantName && (
+                      <div className="text-xs text-muted-foreground mt-0.5">
+                        {transaction.merchantName}
+                      </div>
+                    )}
+                    {transaction.location && (
+                      <div className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
+                        <MapPin className="h-3 w-3" />
+                        {transaction.location}
+                      </div>
+                    )}
+                  </td>
                   <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm">
                     <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
                       {transaction.category}
                     </span>
+                  </td>
+                  <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm">
+                    {transaction.paymentMethod ? (
+                      <div className="flex items-center gap-1.5">
+                        <div className="text-muted-foreground">
+                          {getPaymentIcon(transaction.paymentMethod)}
+                        </div>
+                        <span className="text-xs text-muted-foreground">
+                          {getPaymentLabel(transaction.paymentMethod)}
+                        </span>
+                      </div>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">Cash</span>
+                    )}
+                    {transaction.isAutoSync && (
+                      <div className="text-xs text-primary mt-0.5 flex items-center gap-1">
+                        <Building2 className="h-3 w-3" />
+                        Auto-synced
+                      </div>
+                    )}
                   </td>
                   <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm">
                     <div className="flex items-center gap-1.5">
@@ -127,9 +187,23 @@ export function TransactionsList({ transactions, onDelete }: TransactionsListPro
             <div className="flex items-start justify-between mb-3">
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-card-foreground truncate">{transaction.description}</p>
-                <p className="text-xs text-muted-foreground mt-1.5">
-                  {new Date(transaction.date).toLocaleDateString()}
-                </p>
+                {transaction.merchantName && (
+                  <p className="text-xs text-muted-foreground mt-0.5">{transaction.merchantName}</p>
+                )}
+                <div className="flex items-center gap-2 mt-1.5">
+                  <p className="text-xs text-muted-foreground">
+                    {new Date(transaction.date).toLocaleDateString()}
+                  </p>
+                  {transaction.location && (
+                    <>
+                      <span className="text-muted-foreground">•</span>
+                      <p className="text-xs text-muted-foreground flex items-center gap-1">
+                        <MapPin className="h-3 w-3" />
+                        {transaction.location}
+                      </p>
+                    </>
+                  )}
+                </div>
               </div>
               <Button
                 variant="ghost"
@@ -142,7 +216,7 @@ export function TransactionsList({ transactions, onDelete }: TransactionsListPro
               </Button>
             </div>
             <div className="flex items-center justify-between pt-3 border-t border-border/50">
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-2.5 flex-wrap">
                 {transaction.type === "income" ? (
                   <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-success/10">
                     <div className="p-0.5 rounded-full bg-success/20">
@@ -161,6 +235,18 @@ export function TransactionsList({ transactions, onDelete }: TransactionsListPro
                 <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
                   {transaction.category}
                 </span>
+                {transaction.paymentMethod && (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-muted/50 text-muted-foreground">
+                    {getPaymentIcon(transaction.paymentMethod)}
+                    {getPaymentLabel(transaction.paymentMethod)}
+                  </span>
+                )}
+                {transaction.isAutoSync && (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+                    <Building2 className="h-3 w-3" />
+                    Auto
+                  </span>
+                )}
               </div>
               <p
                 className={`text-base font-bold ${
