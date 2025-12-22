@@ -52,7 +52,7 @@ export class TransactionBuilder {
 
     return await provider.estimateGas({
       to: this.params.to,
-      value: this.params.value || 0n,
+      value: this.params.value || BigInt(0),
       data: this.params.data || '0x'
     });
   }
@@ -64,7 +64,7 @@ export class TransactionBuilder {
 
     return {
       to: this.params.to,
-      value: this.params.value || 0n,
+      value: this.params.value || BigInt(0),
       data: this.params.data || '0x',
       gasLimit: this.params.gasLimit,
       gasPrice: this.params.gasPrice,
@@ -81,7 +81,7 @@ export class TransactionBuilder {
 
     if (!tx.gasPrice) {
       const feeData = await provider.getFeeData();
-      tx.gasPrice = feeData.gasPrice || 0n;
+      tx.gasPrice = feeData.gasPrice || BigInt(0);
     }
 
     return tx;
