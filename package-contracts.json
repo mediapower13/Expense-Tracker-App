@@ -1,0 +1,24 @@
+{
+  "name": "expense-tracker-contracts",
+  "version": "1.0.0",
+  "description": "Smart contracts for blockchain-enabled expense tracking",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:local": "hardhat run scripts/deploy-expense-tracker.js --network localhost",
+    "deploy:sepolia": "hardhat run scripts/deploy-expense-tracker.js --network sepolia",
+    "deploy:polygon": "hardhat run scripts/deploy-expense-tracker.js --network polygon",
+    "deploy:nft:local": "hardhat run scripts/deploy-nft-receipt.js --network localhost",
+    "deploy:nft:sepolia": "hardhat run scripts/deploy-nft-receipt.js --network sepolia",
+    "deploy:payment:local": "hardhat run scripts/deploy-token-payment.js --network localhost",
+    "deploy:payment:sepolia": "hardhat run scripts/deploy-token-payment.js --network sepolia",
+    "node": "hardhat node",
+    "clean": "hardhat clean"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "@openzeppelin/contracts": "^5.0.0",
+    "hardhat": "^2.19.0",
+    "dotenv": "^16.3.1"
+  }
+}
