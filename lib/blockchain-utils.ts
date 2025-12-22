@@ -152,9 +152,11 @@ export class BlockchainUtils {
       timestamp: Math.floor(Date.now() / 1000),
       status: receipt ? this.getTransactionStatus(receipt) : 'pending',
       gasUsed: receipt?.gasUsed?.toString(),
-      gasFee: receipt ? this.formatEther(
-        BigInt(receipt.gasUsed.toString()) * BigInt(tx.gasPrice?.toString() || '0')
-      ) : undefined
+      gasFee: receipt ? (() => {
+        const gasUsedStr = receipt.gasUsed.toString();
+        const gasPriceStr = tx.gasPrice?.toString() || '0';
+        return this.formatEther(BigInt(gasUsedStr) * BigInt(gasPriceStr));
+      })() : undefined
     };
   }
 
