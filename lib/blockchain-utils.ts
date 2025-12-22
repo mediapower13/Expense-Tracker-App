@@ -54,9 +54,8 @@ export class BlockchainUtils {
     gasPrice: string,
     ethPriceUSD: number
   ): Promise<number> {
-    const gasCostEth = parseFloat(this.formatEther(
-      BigInt(gasUsed) * BigInt(gasPrice)
-    ));
+    const gasCostWei = BigInt(gasUsed) * BigInt(gasPrice);
+    const gasCostEth = parseFloat(this.formatEther(gasCostWei));
     return gasCostEth * ethPriceUSD;
   }
 
@@ -154,7 +153,7 @@ export class BlockchainUtils {
       status: receipt ? this.getTransactionStatus(receipt) : 'pending',
       gasUsed: receipt?.gasUsed?.toString(),
       gasFee: receipt ? this.formatEther(
-        BigInt(receipt.gasUsed) * BigInt(tx.gasPrice || 0)
+        BigInt(receipt.gasUsed.toString()) * BigInt(tx.gasPrice?.toString() || '0')
       ) : undefined
     };
   }
