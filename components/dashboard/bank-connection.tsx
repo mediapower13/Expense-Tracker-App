@@ -10,11 +10,17 @@ export function BankConnection() {
   const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([])
   const [showForm, setShowForm] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    bankName: string
+    accountName: string
+    accountNumber: string
+    accountType: "checking" | "savings" | "credit_card" | "investment"
+    balance: number
+  }>({
     bankName: "",
     accountName: "",
     accountNumber: "",
-    accountType: "checking" as const,
+    accountType: "checking",
     balance: 0,
   })
 
