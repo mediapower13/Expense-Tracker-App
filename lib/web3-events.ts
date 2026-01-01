@@ -4,7 +4,7 @@ export interface EventFilter {
   address?: string;
   topics?: string[];
   fromBlock?: number;
-  toBlock?: number;
+  toBlock?: number | 'latest';
 }
 
 export interface ParsedEvent {
