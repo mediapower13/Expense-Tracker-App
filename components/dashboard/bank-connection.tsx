@@ -28,6 +28,7 @@ export function BankConnection() {
 
   useEffect(() => {
     loadBankAccounts()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const loadBankAccounts = async () => {
