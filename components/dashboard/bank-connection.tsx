@@ -10,6 +10,8 @@ export function BankConnection() {
   const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([])
   const [showForm, setShowForm] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
   const [formData, setFormData] = useState<{
     bankName: string
     accountName: string
@@ -31,16 +33,24 @@ export function BankConnection() {
   const loadBankAccounts = async () => {
     try {
       const response = await fetch("/api/banks")
+      if (!response.ok) {
+        throw new Error(`Failed to fetch bank accounts: ${response.statusText}`)
+      }
       const data = await response.json()
       setBankAccounts(data.accounts || [])
-    } catch (error) {
-      console.error("Failed to load bank accounts:", error)
+      setError(null)
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to load bank accounts"
+      setError(errorMessage)
+      console.error("Failed to load bank accounts:", err)
     }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    setError(null)
+    setSuccess(null)
 
     try {
       const response = await fetch("/api/banks", {
@@ -53,36 +63,54 @@ export function BankConnection() {
         }),
       })
 
-      if (response.ok) {
-        await loadBankAccounts()
-        setShowForm(false)
-        setFormData({
-          bankName: "",
-          accountName: "",
-          accountNumber: "",
-          accountType: "checking",
-          balance: 0,
-        })
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: response.statusText }))
+        throw new Error(errorData.error || "Failed to add bank account")
       }
-    } catch (error) {
-      console.error("Failed to add bank account:", error)
+
+      await loadBankAccounts()
+      setShowForm(false)
+      setFormData({
+        bankName: "",
+        accountName: "",
+        accountNumber: "",
+        accountType: "checking",
+        balance: 0,
+      })
+      setSuccess("Bank account added successfully!")
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to add bank account"
+      setError(errorMessage)
+      console.error("Failed to add bank account:", err)
     } finally {
       setLoading(false)
     }
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to remove this bank account?")) return
+    // Using window.confirm is acceptable for simple confirmations in client components
+    if (typeof window !== 'undefined' && !window.confirm("Are you sure you want to remove this bank account?")) {
+      return
+    }
 
     try {
-      await fetch(`/api/banks?id=${id}`, { method: "DELETE" })
+      const response = await fetch(`/api/banks?id=${id}`, { method: "DELETE" })
+      if (!response.ok) {
+        throw new Error("Failed to delete bank account")
+      }
       await loadBankAccounts()
-    } catch (error) {
-      console.error("Failed to delete bank account:", error)
+      setSuccess("Bank account removed successfully!")
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to delete bank account"
+      setError(errorMessage)
+      console.error("Failed to delete bank account:", err)
     }
   }
 
   const handleSync = async (accountId: string) => {
+    setError(null)
+    setSuccess(null)
+
     try {
       const response = await fetch("/api/banks/sync", {
         method: "POST",
@@ -90,12 +118,17 @@ export function BankConnection() {
         body: JSON.stringify({ accountId }),
       })
 
-      if (response.ok) {
-        await loadBankAccounts()
-        alert("Bank account synced successfully!")
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: response.statusText }))
+        throw new Error(errorData.error || "Failed to sync bank account")
       }
-    } catch (error) {
-      console.error("Failed to sync bank account:", error)
+
+      await loadBankAccounts()
+      setSuccess("Bank account synced successfully!")
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to sync bank account"
+      setError(errorMessage)
+      console.error("Failed to sync bank account:", err)
     }
   }
 
@@ -126,6 +159,18 @@ export function BankConnection() {
           Add Bank Account
         </Button>
       </div>
+
+      {error && (
+        <div className="bg-destructive/10 border border-destructive/20 text-destructive px-4 py-3 rounded-lg">
+          <p className="text-sm font-medium">{error}</p>
+        </div>
+      )}
+
+      {success && (
+        <div className="bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 px-4 py-3 rounded-lg">
+          <p className="text-sm font-medium">{success}</p>
+        </div>
+      )}
 
       {showForm && (
         <div className="bg-card rounded-xl border border-border p-6 shadow-lg">
