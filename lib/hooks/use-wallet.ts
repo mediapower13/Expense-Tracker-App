@@ -1,6 +1,6 @@
 // React hooks for Web3 functionality
 import { useState, useEffect, useCallback } from 'react';
-import type { WalletState } from './wallet-types';
+import type { WalletState } from '../wallet-types';
 
 declare global {
   interface Window {
