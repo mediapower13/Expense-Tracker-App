@@ -37,6 +37,7 @@ export function TransactionForm({ categories, onSubmit, onClose, isModal = false
 
   useEffect(() => {
     loadBankAccounts()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const loadBankAccounts = async () => {
