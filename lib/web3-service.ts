@@ -29,6 +29,12 @@ export class Web3Service {
     try {
       this.provider = new ethers.BrowserProvider(window.ethereum);
       this.signer = await this.provider.getSigner();
+      
+      // Validate network
+      const network = await this.provider.getNetwork();
+      if (!WEB3_CONFIG.supportedChainIds.includes(Number(network.chainId))) {
+        console.warn(`Connected to unsupported network: ${network.chainId}`);
+      }
     } catch (error) {
       console.error('Web3 initialization error:', error);
       throw new Error(`Failed to initialize Web3: ${error instanceof Error ? error.message : 'Unknown error'}`);
