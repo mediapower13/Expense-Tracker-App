@@ -324,6 +324,36 @@ export class Web3Service {
       throw error;
     }
   }
+
+  /**
+   * Retry a failed transaction with higher gas
+   */
+  async retryTransaction(txHash: string, gasMultiplier: number = 1.2): Promise<any> {
+    if (!this.provider) {
+      throw new Error('Provider not initialized');
+    }
+    try {
+      const tx = await this.provider.getTransaction(txHash);
+      if (!tx) throw new Error('Transaction not found');
+      
+      // Increase gas price by multiplier
+      const newGasPrice = tx.gasPrice ? (tx.gasPrice * BigInt(Math.floor(gasMultiplier * 100))) / BigInt(100) : undefined;
+      
+      const newTx = {
+        to: tx.to,
+        value: tx.value,
+        data: tx.data,
+        gasPrice: newGasPrice,
+        gasLimit: tx.gasLimit,
+      };
+      
+      const signer = await this.provider.getSigner();
+      return await signer.sendTransaction(newTx);
+    } catch (error) {
+      console.error('Error retrying transaction:', error);
+      throw error;
+    }
+  }
 }
 
 // Export singleton instance
