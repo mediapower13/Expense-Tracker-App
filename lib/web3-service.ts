@@ -66,6 +66,19 @@ export class Web3Service {
   }
 
   /**
+   * Get current connected account address
+   */
+  async getCurrentAccount(): Promise<string | null> {
+    if (!this.signer) return null;
+    try {
+      return await this.signer.getAddress();
+    } catch (error) {
+      console.error('Error getting current account:', error);
+      return null;
+    }
+  }
+
+  /**
    * Get ExpenseTracker contract instance
    */
   getExpenseTrackerContract(): ethers.Contract {
