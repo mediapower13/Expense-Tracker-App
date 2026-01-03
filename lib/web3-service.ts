@@ -30,6 +30,7 @@ export class Web3Service {
       this.provider = new ethers.BrowserProvider(window.ethereum);
       this.signer = await this.provider.getSigner();
     } catch (error) {
+      console.error('Web3 initialization error:', error);
       throw new Error(`Failed to initialize Web3: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
