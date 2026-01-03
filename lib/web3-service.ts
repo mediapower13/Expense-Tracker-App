@@ -90,6 +90,8 @@ export class Web3Service {
 
   /**
    * Get account balance in ETH
+   * @param address - Optional address to get balance for. If not provided, uses current account
+   * @returns Balance in ETH as a string
    */
   async getBalance(address?: string): Promise<string> {
     if (!this.provider) {
