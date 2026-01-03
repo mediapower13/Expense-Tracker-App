@@ -51,6 +51,13 @@ export class Web3Service {
   }
 
   /**
+   * Check if wallet is connected
+   */
+  isConnected(): boolean {
+    return this.provider !== null && this.signer !== null;
+  }
+
+  /**
    * Get ExpenseTracker contract instance
    */
   getExpenseTrackerContract(): ethers.Contract {
