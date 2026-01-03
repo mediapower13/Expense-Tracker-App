@@ -58,6 +58,14 @@ export class Web3Service {
   }
 
   /**
+   * Disconnect wallet
+   */
+  disconnect(): void {
+    this.provider = null;
+    this.signer = null;
+  }
+
+  /**
    * Get ExpenseTracker contract instance
    */
   getExpenseTrackerContract(): ethers.Contract {
