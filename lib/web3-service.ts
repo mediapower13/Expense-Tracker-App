@@ -103,6 +103,27 @@ export class Web3Service {
   }
 
   /**
+   * Setup event listeners for account and network changes
+   */
+  setupEventListeners(
+    onAccountChanged?: (accounts: string[]) => void,
+    onChainChanged?: (chainId: string) => void
+  ): void {
+    if (typeof window === 'undefined' || !window.ethereum) {
+      console.warn('Cannot setup event listeners: window.ethereum not available');
+      return;
+    }
+
+    if (onAccountChanged) {
+      window.ethereum.on('accountsChanged', onAccountChanged);
+    }
+    
+    if (onChainChanged) {
+      window.ethereum.on('chainChanged', onChainChanged);
+    }
+  }
+
+  /**
    * Get ExpenseTracker contract instance
    */
   getExpenseTrackerContract(): ethers.Contract {
