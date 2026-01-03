@@ -79,6 +79,16 @@ export class Web3Service {
   }
 
   /**
+   * Get current network information
+   */
+  async getNetwork(): Promise<any> {
+    if (!this.provider) {
+      throw new Error('Provider not initialized');
+    }
+    return await this.provider.getNetwork();
+  }
+
+  /**
    * Get ExpenseTracker contract instance
    */
   getExpenseTrackerContract(): ethers.Contract {
