@@ -309,6 +309,21 @@ export class Web3Service {
       throw error;
     }
   }
+
+  /**
+   * Estimate gas for a transaction
+   */
+  async estimateGas(transaction: any): Promise<bigint> {
+    if (!this.provider) {
+      throw new Error('Provider not initialized');
+    }
+    try {
+      return await this.provider.estimateGas(transaction);
+    } catch (error) {
+      console.error('Error estimating gas:', error);
+      throw error;
+    }
+  }
 }
 
 // Export singleton instance
