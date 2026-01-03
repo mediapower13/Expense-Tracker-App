@@ -32,7 +32,8 @@ export class Web3Service {
       
       // Validate network
       const network = await this.provider.getNetwork();
-      if (!WEB3_CONFIG.supportedChainIds.includes(Number(network.chainId))) {
+      const supportedChainIds = Object.values(WEB3_CONFIG.networks).map(n => n.chainId);
+      if (!supportedChainIds.includes('0x' + network.chainId.toString(16))) {
         console.warn(`Connected to unsupported network: ${network.chainId}`);
       }
     } catch (error) {
@@ -331,11 +332,9 @@ export class Web3Service {
    * Retry a failed transaction with higher gas
    */
   async retryTransaction(txHash: string, gasMultiplier: number = 1.2): Promise<any> {
-    if (!this.provider) {
-      throw new Error('Provider not initialized');
-    }
+    this.ensureInitialized();
     try {
-      const tx = await this.provider.getTransaction(txHash);
+      const tx = await this.provider!.getTransaction(txHash);
       if (!tx) throw new Error('Transaction not found');
       
       // Increase gas price by multiplier
@@ -343,14 +342,15 @@ export class Web3Service {
       
       const newTx = {
         to: tx.to,
+        from: tx.from,
         value: tx.value,
         data: tx.data,
         gasPrice: newGasPrice,
         gasLimit: tx.gasLimit,
+        nonce: tx.nonce, // Preserve nonce to replace the stuck transaction
       };
       
-      const signer = await this.provider.getSigner();
-      return await signer.sendTransaction(newTx);
+      return await this.signer!.sendTransaction(newTx);
     } catch (error) {
       console.error('Error retrying transaction:', error);
       throw error;
