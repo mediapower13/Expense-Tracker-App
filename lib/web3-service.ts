@@ -293,6 +293,22 @@ export class Web3Service {
       throw new Error(`Failed to process token payment: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
+
+  /**
+   * Get transaction receipt and status
+   */
+  async getTransactionStatus(txHash: string): Promise<any> {
+    if (!this.provider) {
+      throw new Error('Provider not initialized');
+    }
+    try {
+      const receipt = await this.provider.getTransactionReceipt(txHash);
+      return receipt;
+    } catch (error) {
+      console.error('Error getting transaction status:', error);
+      throw error;
+    }
+  }
 }
 
 // Export singleton instance
