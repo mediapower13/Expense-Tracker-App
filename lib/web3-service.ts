@@ -89,6 +89,20 @@ export class Web3Service {
   }
 
   /**
+   * Get account balance in ETH
+   */
+  async getBalance(address?: string): Promise<string> {
+    if (!this.provider) {
+      throw new Error('Provider not initialized');
+    }
+    const addr = address || await this.getCurrentAccount();
+    if (!addr) throw new Error('No account address available');
+    
+    const balance = await this.provider.getBalance(addr);
+    return ethers.formatEther(balance);
+  }
+
+  /**
    * Get ExpenseTracker contract instance
    */
   getExpenseTrackerContract(): ethers.Contract {
