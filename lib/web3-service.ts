@@ -42,9 +42,7 @@ export class Web3Service {
     }
   }
 
-  /**
-   * Check if the service is initialized
-   */
+  
   private ensureInitialized(): void {
     if (!this.signer || !this.provider) {
       throw new Error('Web3Service not initialized. Call initialize() first.');
