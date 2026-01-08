@@ -344,7 +344,7 @@ export class Web3Service {
         data: tx.data,
         gasPrice: newGasPrice,
         gasLimit: tx.gasLimit,
-        nonce: tx.nonce, // Preserve nonce to replace the stuck transaction
+        nonce: tx.nonce,
       };
       
       return await this.signer!.sendTransaction(newTx);
