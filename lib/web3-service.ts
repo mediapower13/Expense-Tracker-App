@@ -297,9 +297,6 @@ export class Web3Service {
     }
   }
 
-  /**
-   * Get transaction receipt and status
-   */
   async getTransactionStatus(txHash: string): Promise<any> {
     if (!this.provider) {
       throw new Error('Provider not initialized');
