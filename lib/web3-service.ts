@@ -313,9 +313,7 @@ export class Web3Service {
     }
   }
 
-  /**
-   * Estimate gas for a transaction
-   */
+  
   async estimateGas(transaction: any): Promise<bigint> {
     if (!this.provider) {
       throw new Error('Provider not initialized');
