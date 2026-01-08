@@ -328,9 +328,6 @@ export class Web3Service {
     }
   }
 
-  /**
-   * Retry a failed transaction with higher gas
-   */
   async retryTransaction(txHash: string, gasMultiplier: number = 1.2): Promise<any> {
     this.ensureInitialized();
     try {
@@ -358,5 +355,4 @@ export class Web3Service {
   }
 }
 
-// Export singleton instance
 export const web3Service = new Web3Service();
