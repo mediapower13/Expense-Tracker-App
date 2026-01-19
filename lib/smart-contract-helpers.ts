@@ -8,14 +8,27 @@ export interface ContractMethod {
 }
 
 export class SmartContractHelper {
+  /**
+   * Encode function call data
+   */
   static encodeFunction(method: string, params: any[]): string {
     const iface = new ethers.Interface([`function ${method}`]);
     return iface.encodeFunctionData(method.split('(')[0], params);
   }
 
+  /**
+   * Decode function call data
+   */
   static decodeFunction(data: string, abi: any[]): any {
     const iface = new ethers.Interface(abi);
     return iface.parseTransaction({ data });
+  }
+
+  /**
+   * Batch encode multiple function calls for multicall
+   */
+  static batchEncodeFunctions(calls: Array<{ method: string; params: any[] }>): string[] {
+    return calls.map(call => this.encodeFunction(call.method, call.params));
   }
 
   static async estimateGas(

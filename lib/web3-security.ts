@@ -7,6 +7,9 @@ export interface SecurityCheck {
 }
 
 export class Web3Security {
+  /**
+   * Validate transaction for security issues
+   */
   static validateTransaction(transaction: any): SecurityCheck[] {
     const checks: SecurityCheck[] = [];
 
@@ -34,6 +37,15 @@ export class Web3Security {
         passed: false,
         level: 'warning',
         message: 'Gas price is unusually high'
+      });
+    }
+
+    // Check for data in transaction
+    if (transaction.data && transaction.data !== '0x') {
+      checks.push({
+        passed: true,
+        level: 'info',
+        message: 'Transaction contains contract interaction data'
       });
     }
 
