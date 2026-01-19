@@ -10,11 +10,19 @@ declare global {
   }
 }
 
+interface NetworkInfo {
+  name: string;
+  chainId: string;
+  isSupported: boolean;
+}
+
 export function WalletConnect() {
   const [address, setAddress] = useState<string | null>(null);
   const [chainId, setChainId] = useState<string | null>(null);
   const [balance, setBalance] = useState<string>('0');
   const [isConnecting, setIsConnecting] = useState(false);
+  const [networkInfo, setNetworkInfo] = useState<NetworkInfo | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     checkConnection();
