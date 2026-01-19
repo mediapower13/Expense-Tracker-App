@@ -27,6 +27,8 @@ export interface BlockchainTransaction {
   category?: string;
   description?: string;
   nftReceiptId?: string;
+  confirmations?: number;
+  errorMessage?: string;
 }
 
 export interface TokenBalance {
