@@ -7,6 +7,8 @@ export interface WalletState {
   isConnected: boolean;
   provider: any;
   signer: any;
+  ensName?: string | null;
+  avatar?: string | null;
 }
 
 export interface BlockchainTransaction {
