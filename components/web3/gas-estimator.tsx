@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 
 interface GasEstimate {
@@ -8,11 +8,15 @@ interface GasEstimate {
   gasPrice: string;
   estimatedCostETH: string;
   estimatedCostUSD: number;
+  maxFeePerGas?: string;
+  maxPriorityFeePerGas?: string;
+  speed: 'slow' | 'standard' | 'fast';
 }
 
 export function GasEstimator() {
   const [estimate, setEstimate] = useState<GasEstimate | null>(null);
   const [loading, setLoading] = useState(false);
+  const [selectedSpeed, setSelectedSpeed] = useState<'slow' | 'standard' | 'fast'>('standard');
 
   const estimateGas = async () => {
     setLoading(true);

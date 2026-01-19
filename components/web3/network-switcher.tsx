@@ -28,11 +28,12 @@ export function NetworkSwitcher() {
 
   const switchNetwork = async (chainId: string) => {
     if (typeof window.ethereum === 'undefined') {
-      alert('Please install MetaMask');
+      setError('Please install MetaMask');
       return;
     }
 
     setSwitching(true);
+    setError(null);
     try {
       await window.ethereum.request({
         method: 'wallet_switchEthereumChain',
@@ -57,10 +58,14 @@ export function NetworkSwitcher() {
                 nativeCurrency: network.nativeCurrency
               }]
             });
+            setCurrentNetwork(chainId);
           }
-        } catch (addError) {
+        } catch (addError: any) {
           console.error('Error adding network:', addError);
+          setError(addError.message || 'Failed to add network');
         }
+      } else {
+        setError(error.message || 'Failed to switch network');
       }
     } finally {
       setSwitching(false);
