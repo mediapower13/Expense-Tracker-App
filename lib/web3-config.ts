@@ -23,6 +23,20 @@ export const WEB3_CONFIG = {
       blockExplorer: 'https://bscscan.com',
       nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 }
     },
+    arbitrum: {
+      chainId: '0xa4b1',
+      chainName: 'Arbitrum One',
+      rpcUrl: 'https://arb1.arbitrum.io/rpc',
+      blockExplorer: 'https://arbiscan.io',
+      nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 }
+    },
+    optimism: {
+      chainId: '0xa',
+      chainName: 'Optimism',
+      rpcUrl: 'https://mainnet.optimism.io',
+      blockExplorer: 'https://optimistic.etherscan.io',
+      nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 }
+    },
     sepolia: {
       chainId: '0xaa36a7',
       chainName: 'Sepolia Testnet',
