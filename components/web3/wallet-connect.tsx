@@ -70,14 +70,32 @@ export function WalletConnect() {
       const chain = await window.ethereum.request({ method: 'eth_chainId' });
       setChainId(chain);
 
+      // Set network info
+      const networks: Record<string, string> = {
+        '0x1': 'Ethereum',
+        '0x89': 'Polygon',
+        '0x38': 'BSC',
+        '0xa4b1': 'Arbitrum',
+        '0xa': 'Optimism',
+        '0xaa36a7': 'Sepolia'
+      };
+
+      setNetworkInfo({
+        name: networks[chain] || 'Unknown',
+        chainId: chain,
+        isSupported: !!networks[chain]
+      });
+
       const bal = await window.ethereum.request({
         method: 'eth_getBalance',
         params: [account, 'latest']
       });
       const balanceInEth = (parseInt(bal, 16) / 1e18).toFixed(4);
       setBalance(balanceInEth);
+      setError(null);
     } catch (error) {
       console.error('Error updating chain and balance:', error);
+      setError('Failed to fetch wallet data');
     }
   };
 
