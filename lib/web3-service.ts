@@ -126,6 +126,34 @@ export class Web3Service {
   }
 
   /**
+   * Get ENS name for an address
+   */
+  async getENSName(address?: string): Promise<string | null> {
+    if (!this.provider) return null;
+    try {
+      const addr = address || await this.getCurrentAccount();
+      if (!addr) return null;
+      return await this.provider.lookupAddress(addr);
+    } catch (error) {
+      console.error('Error fetching ENS name:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Resolve ENS name to address
+   */
+  async resolveENS(ensName: string): Promise<string | null> {
+    if (!this.provider) return null;
+    try {
+      return await this.provider.resolveName(ensName);
+    } catch (error) {
+      console.error('Error resolving ENS name:', error);
+      return null;
+    }
+  }
+
+  /**
    * Get current network information
    */
   async getNetwork(): Promise<any> {
