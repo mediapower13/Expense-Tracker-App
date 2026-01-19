@@ -10,9 +10,33 @@ declare global {
   }
 }
 
+interface RetryOptions {
+  maxRetries: number;
+  delay: number;
+  backoff: number;
+}
+
+interface GasEstimate {
+  gasPrice: bigint;
+  maxFeePerGas?: bigint;
+  maxPriorityFeePerGas?: bigint;
+  estimatedCost: string;
+}
+
+interface TransactionOptions {
+  gasLimit?: bigint;
+  value?: bigint;
+  maxRetries?: number;
+}
+
 export class Web3Service {
   private provider: ethers.BrowserProvider | null = null;
   private signer: ethers.Signer | null = null;
+  private retryOptions: RetryOptions = {
+    maxRetries: 3,
+    delay: 1000,
+    backoff: 2
+  };
 
   /**
    * Initialize provider and signer
@@ -26,7 +50,7 @@ export class Web3Service {
       throw new Error('Web3 provider not found. Please install MetaMask or another Web3 wallet.');
     }
 
-    try {
+    return this.retryOperation(async () => {
       this.provider = new ethers.BrowserProvider(window.ethereum);
       this.signer = await this.provider.getSigner();
       
@@ -36,10 +60,34 @@ export class Web3Service {
       if (!supportedChainIds.includes('0x' + network.chainId.toString(16))) {
         console.warn(`Connected to unsupported network: ${network.chainId}`);
       }
-    } catch (error) {
-      console.error('Web3 initialization error:', error);
-      throw new Error(`Failed to initialize Web3: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    });
+  }
+
+  /**
+   * Retry operation with exponential backoff
+   */
+  private async retryOperation<T>(
+    operation: () => Promise<T>,
+    options?: Partial<RetryOptions>
+  ): Promise<T> {
+    const opts = { ...this.retryOptions, ...options };
+    let lastError: Error;
+
+    for (let attempt = 0; attempt <= opts.maxRetries; attempt++) {
+      try {
+        return await operation();
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error(String(error));
+        
+        if (attempt < opts.maxRetries) {
+          const delay = opts.delay * Math.pow(opts.backoff, attempt);
+          console.log(`Retry attempt ${attempt + 1}/${opts.maxRetries} after ${delay}ms`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+        }
+      }
     }
+
+    throw new Error(`Operation failed after ${opts.maxRetries} retries: ${lastError!.message}`);
   }
 
   
@@ -101,6 +149,42 @@ export class Web3Service {
     
     const balance = await this.provider.getBalance(addr);
     return ethers.formatEther(balance);
+  }
+
+  /**
+   * Estimate gas for a transaction with EIP-1559 support
+   */
+  async estimateGas(to: string, data: string, value?: bigint): Promise<GasEstimate> {
+    this.ensureInitialized();
+    
+    const feeData = await this.provider!.getFeeData();
+    const gasPrice = feeData.gasPrice || BigInt(0);
+    
+    const estimate: GasEstimate = {
+      gasPrice,
+      estimatedCost: '0'
+    };
+    
+    if (feeData.maxFeePerGas && feeData.maxPriorityFeePerGas) {
+      estimate.maxFeePerGas = feeData.maxFeePerGas;
+      estimate.maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
+    }
+    
+    try {
+      const gasEstimate = await this.provider!.estimateGas({
+        to,
+        data,
+        value: value || BigInt(0),
+        from: await this.getCurrentAccount() || undefined
+      });
+      
+      const totalCost = gasEstimate * gasPrice;
+      estimate.estimatedCost = ethers.formatEther(totalCost);
+    } catch (error) {
+      console.error('Gas estimation failed:', error);
+    }
+    
+    return estimate;
   }
 
   /**
