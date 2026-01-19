@@ -101,19 +101,21 @@ export function WalletConnect() {
 
   const connectWallet = async () => {
     if (typeof window.ethereum === 'undefined') {
-      alert('Please install MetaMask to use this feature');
+      setError('Please install MetaMask to use this feature');
       return;
     }
 
     setIsConnecting(true);
+    setError(null);
     try {
       const accounts = await window.ethereum.request({ 
         method: 'eth_requestAccounts' 
       });
       setAddress(accounts[0]);
       await updateChainAndBalance(accounts[0]);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error connecting wallet:', error);
+      setError(error.message || 'Failed to connect wallet');
     } finally {
       setIsConnecting(false);
     }
@@ -131,11 +133,16 @@ export function WalletConnect() {
 
   if (address) {
     return (
-      <div className="flex items-center gap-4 p-4 border rounded-lg">
+      <div className="flex items-center gap-4 p-4 border rounded-lg bg-card">
         <div className="flex-1">
           <p className="text-sm text-muted-foreground">Connected Wallet</p>
           <p className="font-mono font-bold">{shortenAddress(address)}</p>
           <p className="text-sm">{balance} ETH</p>
+          {networkInfo && (
+            <p className={`text-xs mt-1 ${networkInfo.isSupported ? 'text-green-600' : 'text-amber-600'}`}>
+              Network: {networkInfo.name}
+            </p>
+          )}
         </div>
         <Button variant="outline" onClick={disconnect}>
           Disconnect
