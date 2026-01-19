@@ -182,7 +182,7 @@ export class Web3Service {
   /**
    * Estimate gas for a transaction with EIP-1559 support
    */
-  async estimateGas(to: string, data: string, value?: bigint): Promise<GasEstimate> {
+  async estimateGasWithFees(to: string, data: string, value?: bigint): Promise<GasEstimate> {
     this.ensureInitialized();
     
     const feeData = await this.provider!.getFeeData();
