@@ -47,6 +47,31 @@ export class BlockchainUtils {
   }
 
   /**
+   * Format token amount with decimals
+   */
+  static formatTokenAmount(amount: bigint | string, decimals: number): string {
+    try {
+      const value = typeof amount === 'string' ? BigInt(amount) : amount;
+      return ethers.formatUnits(value, decimals);
+    } catch (error) {
+      console.error('Error formatting token amount:', error);
+      return '0';
+    }
+  }
+
+  /**
+   * Parse token amount to base units
+   */
+  static parseTokenAmount(amount: string, decimals: number): bigint {
+    try {
+      return ethers.parseUnits(amount, decimals);
+    } catch (error) {
+      console.error('Error parsing token amount:', error);
+      return BigInt(0);
+    }
+  }
+
+  /**
    * Calculate gas cost in USD
    */
   static async calculateGasCostUSD(
