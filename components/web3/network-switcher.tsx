@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { WEB3_CONFIG } from '@/lib/web3-config';
 
@@ -10,9 +10,16 @@ interface Network {
   isConnected: boolean;
 }
 
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
+
 export function NetworkSwitcher() {
   const [currentNetwork, setCurrentNetwork] = useState<string>('0x1');
   const [switching, setSwitching] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const networks = Object.entries(WEB3_CONFIG.networks).map(([key, config]) => ({
     id: key,
