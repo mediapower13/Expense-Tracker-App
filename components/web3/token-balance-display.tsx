@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { BlockchainUtils } from '@/lib/blockchain-utils';
 
@@ -8,10 +8,13 @@ interface TokenBalance {
   symbol: string;
   balance: string;
   decimals: number;
+  valueUSD?: number;
+  priceChange24h?: number;
 }
 
 interface TokenBalanceDisplayProps {
   address: string;
+  autoRefresh?: boolean;
 }
 
 export function TokenBalanceDisplay({ address }: TokenBalanceDisplayProps) {
