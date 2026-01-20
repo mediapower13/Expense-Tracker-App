@@ -23,6 +23,8 @@ export function WalletConnect() {
   const [isConnecting, setIsConnecting] = useState(false);
   const [networkInfo, setNetworkInfo] = useState<NetworkInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [walletType, setWalletType] = useState<string>('MetaMask');
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     checkConnection();
@@ -32,6 +34,17 @@ export function WalletConnect() {
   const checkConnection = async () => {
     if (typeof window.ethereum !== 'undefined') {
       try {
+        // Detect wallet type
+        if (window.ethereum.isMetaMask) {
+          setWalletType('MetaMask');
+        } else if (window.ethereum.isCoinbaseWallet) {
+          setWalletType('Coinbase Wallet');
+        } else if (window.ethereum.isBraveWallet) {
+          setWalletType('Brave Wallet');
+        } else {
+          setWalletType('Web3 Wallet');
+        }
+
         const accounts = await window.ethereum.request({ 
           method: 'eth_accounts' 
         });
@@ -127,19 +140,58 @@ export function WalletConnect() {
     setBalance('0');
   };
 
+  const refreshBalance = async () => {
+    if (!address) return;
+    setIsRefreshing(true);
+    try {
+      await updateChainAndBalance(address);
+    } catch (error) {
+      console.error('Error refreshing balance:', error);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
   const shortenAddress = (addr: string) => {
     return `${addr.substring(0, 6)}...${addr.substring(38)}`;
   };
 
+  const copyAddress = () => {
+    if (address) {
+      navigator.clipboard.writeText(address);
+      setError('Address copied to clipboard!');
+      setTimeout(() => setError(null), 2000);
+    }
+  };
+
   if (address) {
     return (
-      <div className="flex items-center gap-4 p-4 border rounded-lg bg-card">
+      <div className="flex items-center gap-4 p-4 border rounded-lg bg-card shadow-sm">
         <div className="flex-1">
-          <p className="text-sm text-muted-foreground">Connected Wallet</p>
-          <p className="font-mono font-bold">{shortenAddress(address)}</p>
-          <p className="text-sm">{balance} ETH</p>
+          <div className="flex items-center gap-2">
+            <p className="text-sm text-muted-foreground">Connected Wallet</p>
+            <span className="px-2 py-0.5 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded">
+              {walletType}
+            </span>
+          </div>
+          <p className="font-mono font-bold cursor-pointer hover:text-blue-600 transition-colors" onClick={copyAddress}>
+            {shortenAddress(address)}
+          </p>
+          <div className="flex items-center gap-2 mt-1">
+            <p className="text-sm font-semibold">{balance} ETH</p>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={refreshBalance} 
+              disabled={isRefreshing}
+              className="h-6 px-2"
+            >
+              {isRefreshing ? '⟳' : '↻'}
+            </Button>
+          </div>
           {networkInfo && (
-            <p className={`text-xs mt-1 ${networkInfo.isSupported ? 'text-green-600' : 'text-amber-600'}`}>
+            <p className={`text-xs mt-1 flex items-center gap-1 ${networkInfo.isSupported ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-amber-400'}`}>
+              <span className={`inline-block w-2 h-2 rounded-full ${networkInfo.isSupported ? 'bg-green-500' : 'bg-amber-500'}`}></span>
               Network: {networkInfo.name}
             </p>
           )}
@@ -154,13 +206,26 @@ export function WalletConnect() {
   return (
     <div className="space-y-2">
       {error && (
-        <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+        <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg animate-pulse">
           <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
         </div>
       )}
-      <Button onClick={connectWallet} disabled={isConnecting}>
-        {isConnecting ? 'Connecting...' : 'Connect Wallet'}
+      <Button onClick={connectWallet} disabled={isConnecting} className="w-full">
+        {isConnecting ? (
+          <span className="flex items-center gap-2">
+            <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Connecting...
+          </span>
+        ) : (
+          '🔐 Connect Wallet'
+        )}
       </Button>
+      <p className="text-xs text-center text-muted-foreground">
+        Connect your wallet to access blockchain features
+      </p>
     </div>
   );
 }
