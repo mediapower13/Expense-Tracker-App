@@ -40,6 +40,9 @@ export function TransactionHistory({ address, limit = 10 }: TransactionHistoryPr
       // Enhanced mock transaction history
       const mockTransactions: BlockchainTransaction[] = Array.from({ length: limit }, (_, i) => {
         const isSent = Math.random() > 0.5;
+        const randomStatus = Math.random();
+        const status: 'confirmed' | 'pending' | 'failed' = randomStatus > 0.1 ? 'confirmed' : (randomStatus > 0.5 ? 'pending' : 'failed');
+        
         return {
           id: `tx-${i}`,
           hash: `0x${Math.random().toString(16).substr(2, 64)}`,
@@ -48,7 +51,7 @@ export function TransactionHistory({ address, limit = 10 }: TransactionHistoryPr
           value: (Math.random() * 10).toFixed(4),
           timestamp: Date.now() - i * 3600000,
           blockNumber: 18000000 + i,
-          status: Math.random() > 0.1 ? 'confirmed' : (Math.random() > 0.5 ? 'pending' : 'failed') as const,
+          status,
           type: ['expense', 'income', 'transfer'][Math.floor(Math.random() * 3)] as any,
           confirmations: Math.floor(Math.random() * 50),
           gasUsed: '21000',
