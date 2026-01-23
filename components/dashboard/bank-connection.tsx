@@ -315,7 +315,7 @@ export function BankConnection() {
               className="bg-card rounded-xl border-2 border-border p-6 shadow-lg hover:shadow-xl hover:border-primary/50 transition-all group relative overflow-hidden"
             >
               {/* Gradient background on hover */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               
               <div className="relative z-10">
                 <div className="flex items-start justify-between mb-4">
@@ -354,7 +354,7 @@ export function BankConnection() {
                       {account.accountType.replace("_", " ").toUpperCase()}
                     </span>
                   </div>
-                  <div className="flex justify-between items-center p-4 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg border border-primary/20">
+                  <div className="flex justify-between items-center p-4 bg-linear-to-br from-primary/10 to-primary/5 rounded-lg border border-primary/20">
                     <span className="text-sm font-medium text-muted-foreground">Balance</span>
                     <span className="text-2xl font-bold text-primary">
                       ${account.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
