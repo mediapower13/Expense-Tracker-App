@@ -161,4 +161,74 @@ export class Web3Security {
       return false;
     }
   }
+
+  static validateAmount(amount: string, maxAmount?: string): SecurityCheck {
+    try {
+      const value = parseFloat(amount);
+      
+      if (value <= 0) {
+        return {
+          passed: false,
+          level: 'critical',
+          message: 'Amount must be greater than 0'
+        };
+      }
+
+      if (maxAmount && value > parseFloat(maxAmount)) {
+        return {
+          passed: false,
+          level: 'critical',
+          message: 'Amount exceeds maximum allowed'
+        };
+      }
+
+      return {
+        passed: true,
+        level: 'info',
+        message: 'Amount is valid'
+      };
+    } catch {
+      return {
+        passed: false,
+        level: 'critical',
+        message: 'Invalid amount format'
+      };
+    }
+  }
+
+  static checkTransactionRateLimit(
+    recentTransactions: number,
+    timeWindow: number,
+    maxTransactions: number
+  ): SecurityCheck {
+    if (recentTransactions >= maxTransactions) {
+      return {
+        passed: false,
+        level: 'warning',
+        message: `Too many transactions in ${timeWindow}ms. Please wait.`
+      };
+    }
+
+    return {
+      passed: true,
+      level: 'info',
+      message: 'Rate limit check passed'
+    };
+  }
+
+  static validateChainId(chainId: string, allowedChains: string[]): SecurityCheck {
+    if (!allowedChains.includes(chainId)) {
+      return {
+        passed: false,
+        level: 'warning',
+        message: 'Connected to unsupported network'
+      };
+    }
+
+    return {
+      passed: true,
+      level: 'info',
+      message: 'Chain ID is supported'
+    };
+  }
 }
