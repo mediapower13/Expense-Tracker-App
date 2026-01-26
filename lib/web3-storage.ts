@@ -120,4 +120,64 @@ export class Web3Storage {
     this.clearTransactionCache();
     localStorage.removeItem(this.SETTINGS_KEY);
   }
+
+  static saveFavoriteAddress(label: string, address: string): void {
+    if (typeof window === 'undefined') return;
+    
+    try {
+      const favorites = this.getFavoriteAddresses();
+      favorites[address] = { label, address, timestamp: Date.now() };
+      localStorage.setItem('web3_favorites', JSON.stringify(favorites));
+    } catch (error) {
+      console.error('Failed to save favorite address:', error);
+    }
+  }
+
+  static getFavoriteAddresses(): Record<string, { label: string; address: string; timestamp: number }> {
+    if (typeof window === 'undefined') return {};
+    
+    try {
+      const data = localStorage.getItem('web3_favorites');
+      return data ? JSON.parse(data) : {};
+    } catch (error) {
+      return {};
+    }
+  }
+
+  static removeFavoriteAddress(address: string): void {
+    if (typeof window === 'undefined') return;
+    
+    try {
+      const favorites = this.getFavoriteAddresses();
+      delete favorites[address];
+      localStorage.setItem('web3_favorites', JSON.stringify(favorites));
+    } catch (error) {
+      console.error('Failed to remove favorite address:', error);
+    }
+  }
+
+  static getStorageSize(): number {
+    if (typeof window === 'undefined') return 0;
+    
+    let total = 0;
+    for (const key in localStorage) {
+      if (localStorage.hasOwnProperty(key)) {
+        total += localStorage[key].length + key.length;
+      }
+    }
+    return total;
+  }
+
+  static isStorageAvailable(): boolean {
+    if (typeof window === 'undefined') return false;
+    
+    try {
+      const test = '__storage_test__';
+      localStorage.setItem(test, test);
+      localStorage.removeItem(test);
+      return true;
+    } catch {
+      return false;
+    }
+  }
 }
