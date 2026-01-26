@@ -121,3 +121,65 @@ export function useWallet() {
     disconnect
   };
 }
+
+export function useWalletBalance(address?: string) {
+  const [balance, setBalance] = useState<string>('0');
+  const [loading, setLoading] = useState(false);
+
+  const fetchBalance = useCallback(async () => {
+    if (!address || typeof window.ethereum === 'undefined') return;
+    
+    setLoading(true);
+    try {
+      const balance = await window.ethereum.request({
+        method: 'eth_getBalance',
+        params: [address, 'latest']
+      });
+      const balanceInEth = (parseInt(balance, 16) / 1e18).toFixed(4);
+      setBalance(balanceInEth);
+    } catch (err) {
+      console.error('Error fetching balance:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [address]);
+
+  useEffect(() => {
+    fetchBalance();
+  }, [fetchBalance]);
+
+  return { balance, loading, refresh: fetchBalance };
+}
+
+export function useChainId() {
+  const [chainId, setChainId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchChainId = async () => {
+      if (typeof window.ethereum === 'undefined') return;
+      
+      try {
+        const id = await window.ethereum.request({ method: 'eth_chainId' });
+        setChainId(id);
+      } catch (err) {
+        console.error('Error fetching chain ID:', err);
+      }
+    };
+
+    fetchChainId();
+
+    if (typeof window.ethereum !== 'undefined') {
+      window.ethereum.on('chainChanged', (newChainId: string) => {
+        setChainId(newChainId);
+      });
+    }
+
+    return () => {
+      if (typeof window.ethereum !== 'undefined') {
+        window.ethereum.removeListener('chainChanged', () => {});
+      }
+    };
+  }, []);
+
+  return chainId;
+}
