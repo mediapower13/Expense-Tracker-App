@@ -8,7 +8,16 @@ export async function GET(request: Request) {
 
   if (!address) {
     return NextResponse.json(
-      { error: 'Address is required' },
+      { error: 'Address parameter is required' },
+      { status: 400 }
+    );
+  }
+
+  // Validate Ethereum address format
+  const ethAddressRegex = /^0x[a-fA-F0-9]{40}$/;
+  if (!ethAddressRegex.test(address)) {
+    return NextResponse.json(
+      { error: 'Invalid Ethereum address format' },
       { status: 400 }
     );
   }
