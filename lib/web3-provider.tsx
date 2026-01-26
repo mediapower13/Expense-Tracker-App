@@ -32,3 +32,21 @@ export function useWeb3() {
   }
   return context;
 }
+
+export function useWeb3Safe() {
+  try {
+    return useWeb3();
+  } catch {
+    return null;
+  }
+}
+
+export function Web3Guard({ children, fallback }: { children: ReactNode; fallback?: ReactNode }) {
+  const web3 = useWeb3Safe();
+
+  if (!web3 || !web3.wallet.isConnected) {
+    return <>{fallback || <div>Please connect your wallet</div>}</>;
+  }
+
+  return <>{children}</>;
+}
