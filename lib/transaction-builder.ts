@@ -13,7 +13,7 @@ export class TransactionBuilder {
   private params: Partial<TransactionParams> = {};
 
   setRecipient(address: string): this {
-    if (!ethers.isAddress(address)) {
+    if (!address || !ethers.isAddress(address)) {
       throw new Error('Invalid recipient address');
     }
     this.params.to = address;
@@ -21,16 +21,32 @@ export class TransactionBuilder {
   }
 
   setValue(amount: string): this {
-    this.params.value = ethers.parseEther(amount);
+    if (!amount || amount.trim() === '') {
+      throw new Error('Amount cannot be empty');
+    }
+    try {
+      this.params.value = ethers.parseEther(amount);
+      if (this.params.value < 0n) {
+        throw new Error('Amount cannot be negative');
+      }
+    } catch (error) {
+      throw new Error('Invalid amount format');
+    }
     return this;
   }
 
   setData(data: string): this {
+    if (data && !data.startsWith('0x')) {
+      throw new Error('Data must be a valid hex string starting with 0x');
+    }
     this.params.data = data;
     return this;
   }
 
   setGasLimit(limit: number): this {
+    if (limit <= 0) {
+      throw new Error('Gas limit must be greater than 0');
+    }
     this.params.gasLimit = BigInt(limit);
     return this;
   }
