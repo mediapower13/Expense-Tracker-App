@@ -42,7 +42,8 @@ export class BlockchainUtils {
    * Shorten address for display
    */
   static shortenAddress(address: string, chars = 4): string {
-    if (!this.isValidAddress(address)) return '';
+    if (!address || !this.isValidAddress(address)) return '';
+    if (address.length < chars + 2) return address;
     return `${address.substring(0, chars + 2)}...${address.substring(42 - chars)}`;
   }
 
