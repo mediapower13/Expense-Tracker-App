@@ -134,4 +134,36 @@ export class Web3Events {
   static decodeEventData(data: string, types: string[]): any[] {
     return ethers.AbiCoder.defaultAbiCoder().decode(types, data);
   }
+
+  async getTransactionReceipt(txHash: string): Promise<ethers.TransactionReceipt | null> {
+    return await this.provider.getTransactionReceipt(txHash);
+  }
+
+  async getBlockNumber(): Promise<number> {
+    return await this.provider.getBlockNumber();
+  }
+
+  async getBlock(blockNumber: number | 'latest'): Promise<ethers.Block | null> {
+    return await this.provider.getBlock(blockNumber);
+  }
+
+  async filterEventsByAddress(
+    events: ParsedEvent[],
+    address: string
+  ): ParsedEvent[] {
+    return events.filter(event => 
+      event.args && Object.values(event.args).some(
+        arg => typeof arg === 'string' && arg.toLowerCase() === address.toLowerCase()
+      )
+    );
+  }
+
+  async getEventCount(
+    contractAddress: string,
+    eventSignature: string,
+    fromBlock: number = 0
+  ): Promise<number> {
+    const events = await this.getEventsBySignature(contractAddress, eventSignature, fromBlock);
+    return events.length;
+  }
 }
