@@ -90,7 +90,19 @@ export class Web3Security {
   }
 
   static sanitizeInput(input: string): string {
-    return input.trim().replace(/[^\w\s.-]/gi, '');
+    if (!input || typeof input !== 'string') return '';
+    // Remove potentially dangerous characters while preserving alphanumeric, spaces, dots, and hyphens
+    return input.trim().replace(/[^\w\s.-]/gi, '').substring(0, 1000);
+  }
+
+  static sanitizeAddress(address: string): string {
+    if (!address || typeof address !== 'string') return '';
+    // Ensure address starts with 0x and contains only valid hex characters
+    const cleaned = address.trim().toLowerCase();
+    if (!/^0x[a-f0-9]{40}$/i.test(cleaned)) {
+      throw new Error('Invalid address format');
+    }
+    return cleaned;
   }
 
   static validateSignature(
