@@ -120,4 +120,63 @@ export class TransactionBuilder {
       .setRecipient(nftAddress)
       .setData(data);
   }
+
+  static createERC20Approval(
+    tokenAddress: string,
+    spender: string,
+    amount: string
+  ): TransactionBuilder {
+    const iface = new ethers.Interface([
+      'function approve(address spender, uint256 amount) returns (bool)'
+    ]);
+    
+    const data = iface.encodeFunctionData('approve', [spender, ethers.parseEther(amount)]);
+    
+    return new TransactionBuilder()
+      .setRecipient(tokenAddress)
+      .setData(data);
+  }
+
+  static createContractCall(
+    contractAddress: string,
+    abi: string[],
+    functionName: string,
+    params: any[]
+  ): TransactionBuilder {
+    const iface = new ethers.Interface(abi);
+    const data = iface.encodeFunctionData(functionName, params);
+    
+    return new TransactionBuilder()
+      .setRecipient(contractAddress)
+      .setData(data);
+  }
+
+  clone(): TransactionBuilder {
+    const builder = new TransactionBuilder();
+    builder.params = { ...this.params };
+    return builder;
+  }
+
+  getParams(): Partial<TransactionParams> {
+    return { ...this.params };
+  }
+
+  validate(): { valid: boolean; errors: string[] } {
+    const errors: string[] = [];
+
+    if (!this.params.to) {
+      errors.push('Recipient address is required');
+    } else if (!ethers.isAddress(this.params.to)) {
+      errors.push('Invalid recipient address');
+    }
+
+    if (this.params.value && this.params.value < 0n) {
+      errors.push('Value cannot be negative');
+    }
+
+    return {
+      valid: errors.length === 0,
+      errors
+    };
+  }
 }
