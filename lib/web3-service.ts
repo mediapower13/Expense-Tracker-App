@@ -458,6 +458,64 @@ export class Web3Service {
       throw error;
     }
   }
+
+  /**
+   * Get wallet balance
+   */
+  async getBalance(address?: string): Promise<string> {
+    this.ensureInitialized();
+    const addr = address || await this.getCurrentAccount();
+    if (!addr) throw new Error('No address available');
+    
+    const balance = await this.provider!.getBalance(addr);
+    return ethers.formatEther(balance);
+  }
+
+  /**
+   * Sign a message
+   */
+  async signMessage(message: string): Promise<string> {
+    this.ensureInitialized();
+    return await this.signer!.signMessage(message);
+  }
+
+  /**
+   * Verify a signed message
+   */
+  verifyMessage(message: string, signature: string): string {
+    return ethers.verifyMessage(message, signature);
+  }
+
+  /**
+   * Get current network information
+   */
+  async getNetworkInfo(): Promise<{ chainId: bigint; name: string }> {
+    this.ensureInitialized();
+    const network = await this.provider!.getNetwork();
+    return {
+      chainId: network.chainId,
+      name: network.name
+    };
+  }
+
+  /**
+   * Switch network
+   */
+  async switchNetwork(chainId: string): Promise<void> {
+    if (!window.ethereum) throw new Error('No wallet found');
+    
+    try {
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId }],
+      });
+    } catch (error: any) {
+      if (error.code === 4902) {
+        throw new Error('Network not found in wallet');
+      }
+      throw error;
+    }
+  }
 }
 
 export const web3Service = new Web3Service();
