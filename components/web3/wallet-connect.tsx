@@ -229,3 +229,32 @@ export function WalletConnect() {
     </div>
   );
 }
+
+export function WalletStatus() {
+  const [connected, setConnected] = useState(false);
+  const [address, setAddress] = useState<string | null>(null);
+
+  useEffect(() => {
+    const checkStatus = async () => {
+      if (typeof window.ethereum !== 'undefined') {
+        const accounts = await window.ethereum.request({ 
+          method: 'eth_accounts' 
+        });
+        setConnected(accounts.length > 0);
+        setAddress(accounts[0] || null);
+      }
+    };
+    checkStatus();
+  }, []);
+
+  if (!connected) return null;
+
+  return (
+    <div className="flex items-center gap-2 text-sm">
+      <span className="inline-block w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+      <span className="text-muted-foreground">
+        {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'Connected'}
+      </span>
+    </div>
+  );
+}
