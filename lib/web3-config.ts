@@ -75,3 +75,51 @@ export const WEB3_CONFIG = {
 
 export const DEFAULT_NETWORK = 'polygon';
 export const DEFAULT_TOKEN = 'USDC';
+
+// Gas settings
+export const GAS_CONFIG = {
+  maxGasLimit: 500000,
+  gasLimitBuffer: 1.2, // 20% buffer over estimate
+  maxPriorityFeeMultiplier: 1.5
+};
+
+// Transaction settings
+export const TX_CONFIG = {
+  confirmations: 2,
+  timeout: 300000, // 5 minutes
+  retryAttempts: 3,
+  retryDelay: 5000 // 5 seconds
+};
+
+// IPFS Configuration
+export const IPFS_CONFIG = {
+  gateway: 'https://ipfs.io/ipfs/',
+  pinataGateway: 'https://gateway.pinata.cloud/ipfs/',
+  uploadEndpoint: 'https://api.pinata.cloud/pinning/pinFileToIPFS'
+};
+
+// Web3 Storage Configuration
+export const STORAGE_CONFIG = {
+  cacheExpiry: 3600000, // 1 hour
+  maxCacheSize: 100,
+  persistenceKey: 'web3_storage'
+};
+
+// Error messages
+export const ERROR_MESSAGES = {
+  NO_WALLET: 'No Web3 wallet detected. Please install MetaMask.',
+  WRONG_NETWORK: 'Please switch to the correct network.',
+  INSUFFICIENT_FUNDS: 'Insufficient funds for transaction.',
+  TX_REJECTED: 'Transaction was rejected by user.',
+  TX_FAILED: 'Transaction failed. Please try again.',
+  UNKNOWN_ERROR: 'An unknown error occurred.'
+};
+
+// Feature flags
+export const FEATURES = {
+  enableNFTReceipts: true,
+  enableTokenPayments: true,
+  enableGasOptimization: true,
+  enableBatchTransactions: false,
+  enableENS: true
+};
