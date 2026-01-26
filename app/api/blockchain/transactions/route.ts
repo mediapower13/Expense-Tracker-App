@@ -63,22 +63,40 @@ export async function POST(request: Request) {
     // Validate input
     if (!from || !to || !value) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Missing required fields: from, to, and value are required' },
+        { status: 400 }
+      );
+    }
+
+    // Validate Ethereum addresses
+    const ethAddressRegex = /^0x[a-fA-F0-9]{40}$/;
+    if (!ethAddressRegex.test(from) || !ethAddressRegex.test(to)) {
+      return NextResponse.json(
+        { error: 'Invalid Ethereum address format' },
+        { status: 400 }
+      );
+    }
+
+    // Validate value is a positive number
+    const numValue = parseFloat(value);
+    if (isNaN(numValue) || numValue <= 0) {
+      return NextResponse.json(
+        { error: 'Value must be a positive number' },
         { status: 400 }
       );
     }
 
     // Mock transaction creation
     const transaction = {
-      hash: `0x${Math.random().toString(16).substring(2, 18)}`,
+      hash: `0x${Math.random().toString(16).substring(2, 66).padEnd(64, '0')}`,
       from,
       to,
-      value,
+      value: numValue.toString(),
       token: token || 'ETH',
-      timestamp: Date.now() / 1000,
+      timestamp: Math.floor(Date.now() / 1000),
       status: 'pending',
-      category,
-      description
+      category: category || 'Uncategorized',
+      description: description || ''
     };
 
     return NextResponse.json({
@@ -86,8 +104,9 @@ export async function POST(request: Request) {
       transaction
     });
   } catch (error) {
+    console.error('Error creating transaction:', error);
     return NextResponse.json(
-      { error: 'Failed to create blockchain transaction' },
+      { error: 'Failed to create blockchain transaction', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }
