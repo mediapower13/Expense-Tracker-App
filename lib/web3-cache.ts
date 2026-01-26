@@ -8,11 +8,23 @@ export interface CacheEntry<T> {
 export class Web3Cache {
   private cache: Map<string, CacheEntry<any>> = new Map();
   private defaultTTL: number = 60000; // 1 minute
+  private maxSize: number = 1000; // Maximum cache entries
 
   /**
    * Set cache entry with TTL
    */
   set<T>(key: string, data: T, ttl?: number): void {
+    if (!key || typeof key !== 'string') {
+      throw new Error('Cache key must be a non-empty string');
+    }
+
+    // Prevent cache from growing too large
+    if (this.cache.size >= this.maxSize) {
+      // Remove oldest entry
+      const firstKey = this.cache.keys().next().value;
+      if (firstKey) this.cache.delete(firstKey);
+    }
+
     this.cache.set(key, {
       data,
       timestamp: Date.now(),
@@ -24,6 +36,8 @@ export class Web3Cache {
    * Get cache entry if not expired
    */
   get<T>(key: string): T | null {
+    if (!key || typeof key !== 'string') return null;
+    
     const entry = this.cache.get(key);
     if (!entry) return null;
 
