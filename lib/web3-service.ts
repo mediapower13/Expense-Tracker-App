@@ -460,18 +460,6 @@ export class Web3Service {
   }
 
   /**
-   * Get wallet balance
-   */
-  async getBalance(address?: string): Promise<string> {
-    this.ensureInitialized();
-    const addr = address || await this.getCurrentAccount();
-    if (!addr) throw new Error('No address available');
-    
-    const balance = await this.provider!.getBalance(addr);
-    return ethers.formatEther(balance);
-  }
-
-  /**
    * Sign a message
    */
   async signMessage(message: string): Promise<string> {
