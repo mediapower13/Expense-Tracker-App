@@ -84,4 +84,77 @@ export class Web3Analytics {
       prediction: avg
     };
   }
+
+  static getTransactionsByPeriod(
+    transactions: any[],
+    period: 'day' | 'week' | 'month'
+  ): Record<string, any[]> {
+    const now = Date.now();
+    const periodMs = {
+      day: 24 * 60 * 60 * 1000,
+      week: 7 * 24 * 60 * 60 * 1000,
+      month: 30 * 24 * 60 * 60 * 1000
+    }[period];
+
+    const grouped: Record<string, any[]> = {};
+
+    transactions.forEach(tx => {
+      const txTime = tx.timestamp * 1000;
+      if (now - txTime <= periodMs) {
+        const date = new Date(txTime).toLocaleDateString();
+        if (!grouped[date]) grouped[date] = [];
+        grouped[date].push(tx);
+      }
+    });
+
+    return grouped;
+  }
+
+  static calculateAverageTransactionValue(transactions: any[]): number {
+    if (transactions.length === 0) return 0;
+    const total = transactions.reduce((sum, tx) => sum + parseFloat(tx.value || '0'), 0);
+    return total / transactions.length;
+  }
+
+  static getTopRecipients(transactions: any[], limit: number = 5): Array<{ address: string; count: number; totalValue: string }> {
+    const recipientMap: Record<string, { count: number; totalValue: number }> = {};
+
+    transactions.forEach(tx => {
+      if (tx.to) {
+        if (!recipientMap[tx.to]) {
+          recipientMap[tx.to] = { count: 0, totalValue: 0 };
+        }
+        recipientMap[tx.to].count++;
+        recipientMap[tx.to].totalValue += parseFloat(tx.value || '0');
+      }
+    });
+
+    return Object.entries(recipientMap)
+      .map(([address, data]) => ({
+        address,
+        count: data.count,
+        totalValue: data.totalValue.toFixed(4)
+      }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, limit);
+  }
+
+  static getFailureRate(transactions: any[]): number {
+    if (transactions.length === 0) return 0;
+    const failed = transactions.filter(tx => tx.status === 'failed').length;
+    return (failed / transactions.length) * 100;
+  }
+
+  static estimateMonthlyCosts(recentTransactions: any[]): { gas: string; total: string } {
+    const dailyAvg = recentTransactions
+      .slice(-7)
+      .reduce((sum, tx) => sum + parseFloat(tx.gasCost || '0'), 0) / 7;
+    
+    const monthlyGas = dailyAvg * 30;
+    
+    return {
+      gas: monthlyGas.toFixed(6),
+      total: monthlyGas.toFixed(6)
+    };
+  }
 }
