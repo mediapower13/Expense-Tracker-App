@@ -96,4 +96,41 @@ export class SmartContractHelper {
     if (!tx) return null;
     return await tx.wait(confirmations);
   }
+
+  static async getTransactionStatus(
+    provider: ethers.Provider,
+    txHash: string
+  ): Promise<{ confirmed: boolean; blockNumber?: number; status?: number }> {
+    const receipt = await provider.getTransactionReceipt(txHash);
+    if (!receipt) {
+      return { confirmed: false };
+    }
+    return {
+      confirmed: true,
+      blockNumber: receipt.blockNumber,
+      status: receipt.status
+    };
+  }
+
+  static async getCurrentGasPrice(provider: ethers.Provider): Promise<bigint> {
+    const feeData = await provider.getFeeData();
+    return feeData.gasPrice || BigInt(0);
+  }
+
+  static calculateTransactionCost(gasUsed: bigint, gasPrice: bigint): bigint {
+    return gasUsed * gasPrice;
+  }
+
+  static async getBlockTimestamp(provider: ethers.Provider, blockNumber: number): Promise<number> {
+    const block = await provider.getBlock(blockNumber);
+    return block ? block.timestamp : 0;
+  }
+
+  static encodeParameters(types: string[], values: any[]): string {
+    return ethers.AbiCoder.defaultAbiCoder().encode(types, values);
+  }
+
+  static decodeParameters(types: string[], data: string): any {
+    return ethers.AbiCoder.defaultAbiCoder().decode(types, data);
+  }
 }
