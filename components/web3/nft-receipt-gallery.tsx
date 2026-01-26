@@ -18,6 +18,7 @@ export function NFTReceiptGallery() {
   const [loading, setLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [totalValue, setTotalValue] = useState(0);
+  const [error, setError] = useState<string | null>(null);
 
   const categories = ['all', 'Food', 'Transport', 'Shopping', 'Entertainment', 'Bills'];
 
@@ -26,12 +27,21 @@ export function NFTReceiptGallery() {
   }, [receipts]);
 
   const calculateTotal = () => {
-    const total = receipts.reduce((sum, r) => sum + parseFloat(r.amount), 0);
-    setTotalValue(total);
+    try {
+      const total = receipts.reduce((sum, r) => {
+        const amount = parseFloat(r.amount);
+        return sum + (isNaN(amount) ? 0 : amount);
+      }, 0);
+      setTotalValue(total);
+    } catch (err) {
+      console.error('Error calculating total:', err);
+      setTotalValue(0);
+    }
   };
 
   const loadReceipts = async () => {
     setLoading(true);
+    setError(null);
     try {
       // Enhanced mock NFT receipts
       const mockReceipts: NFTReceipt[] = [
@@ -75,6 +85,7 @@ export function NFTReceiptGallery() {
       setReceipts(mockReceipts);
     } catch (error) {
       console.error('Error loading NFT receipts:', error);
+      setError(error instanceof Error ? error.message : 'Failed to load NFT receipts');
     } finally {
       setLoading(false);
     }
