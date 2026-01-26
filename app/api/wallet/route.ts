@@ -12,6 +12,15 @@ export async function GET(request: Request) {
     );
   }
 
+  // Validate Ethereum address format
+  const ethAddressRegex = /^0x[a-fA-F0-9]{40}$/;
+  if (!ethAddressRegex.test(address)) {
+    return NextResponse.json(
+      { error: 'Invalid Ethereum address format' },
+      { status: 400 }
+    );
+  }
+
   try {
     // Mock wallet data - in production, fetch from blockchain
     const walletData = {
@@ -40,7 +49,30 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { address, chainId, action } = body;
 
+    if (!action) {
+      return NextResponse.json(
+        { error: 'Action parameter is required' },
+        { status: 400 }
+      );
+    }
+
     if (action === 'connect') {
+      if (!address) {
+        return NextResponse.json(
+          { error: 'Address is required for connect action' },
+          { status: 400 }
+        );
+      }
+
+      // Validate Ethereum address format
+      const ethAddressRegex = /^0x[a-fA-F0-9]{40}$/;
+      if (!ethAddressRegex.test(address)) {
+        return NextResponse.json(
+          { error: 'Invalid Ethereum address format' },
+          { status: 400 }
+        );
+      }
+
       // Store wallet connection in database
       return NextResponse.json({
         success: true,
@@ -58,7 +90,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(
-      { error: 'Invalid action' },
+      { error: 'Invalid action. Supported actions: connect, disconnect' },
       { status: 400 }
     );
   } catch (error) {
