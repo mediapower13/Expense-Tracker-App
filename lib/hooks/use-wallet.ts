@@ -2,12 +2,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { WalletState } from '../wallet-types';
 
-declare global {
-  interface Window {
-    ethereum?: any;
-  }
-}
-
 export function useWallet() {
   const [wallet, setWallet] = useState<WalletState>({
     address: null,

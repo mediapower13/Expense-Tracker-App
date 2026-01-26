@@ -3,13 +3,6 @@ import { ethers } from 'ethers';
 import { EXPENSE_TRACKER_ABI, NFT_RECEIPT_ABI, TOKEN_PAYMENT_ABI } from './contract-abis';
 import { WEB3_CONFIG } from './web3-config';
 
-// Type declaration for window.ethereum
-declare global {
-  interface Window {
-    ethereum?: any;
-  }
-}
-
 interface RetryOptions {
   maxRetries: number;
   delay: number;

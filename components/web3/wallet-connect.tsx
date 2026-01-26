@@ -4,12 +4,6 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { WalletType } from '@/lib/wallet-types';
 
-declare global {
-  interface Window {
-    ethereum?: any;
-  }
-}
-
 interface NetworkInfo {
   name: string;
   chainId: string;
