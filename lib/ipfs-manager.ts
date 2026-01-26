@@ -119,3 +119,61 @@ export const ipfsManager = new IPFSManager(
   process.env.NEXT_PUBLIC_IPFS_GATEWAY,
   process.env.IPFS_API_KEY
 );
+
+export class IPFSCache {
+  private cache: Map<string, { data: any; timestamp: number }> = new Map();
+  private maxAge: number = 3600000; // 1 hour
+
+  get(cid: string): any | null {
+    const cached = this.cache.get(cid);
+    if (!cached) return null;
+
+    const now = Date.now();
+    if (now - cached.timestamp > this.maxAge) {
+      this.cache.delete(cid);
+      return null;
+    }
+
+    return cached.data;
+  }
+
+  set(cid: string, data: any): void {
+    this.cache.set(cid, {
+      data,
+      timestamp: Date.now()
+    });
+  }
+
+  clear(): void {
+    this.cache.clear();
+  }
+
+  setMaxAge(ms: number): void {
+    this.maxAge = ms;
+  }
+}
+
+export const ipfsCache = new IPFSCache();
+
+export async function uploadToIPFS(data: any, type: 'json' | 'file' = 'json'): Promise<string> {
+  if (type === 'json') {
+    return await ipfsManager.uploadMetadata(data);
+  } else {
+    return await ipfsManager.uploadImage(data);
+  }
+}
+
+export async function fetchFromIPFS(cid: string, useCache: boolean = true): Promise<any> {
+  if (useCache) {
+    const cached = ipfsCache.get(cid);
+    if (cached) return cached;
+  }
+
+  const data = await ipfsManager.fetchMetadata(cid);
+  
+  if (useCache) {
+    ipfsCache.set(cid, data);
+  }
+
+  return data;
+}
