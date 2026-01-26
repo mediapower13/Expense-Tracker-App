@@ -108,7 +108,7 @@ export class SmartContractHelper {
     return {
       confirmed: true,
       blockNumber: receipt.blockNumber,
-      status: receipt.status
+      status: receipt.status ?? undefined
     };
   }
 
