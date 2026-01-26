@@ -190,4 +190,83 @@ export class BlockchainUtils {
   static generateTransactionId(hash: string, index: number = 0): string {
     return `${hash}-${index}`;
   }
+
+  /**
+   * Check if transaction is ERC20 transfer
+   */
+  static isERC20Transfer(tx: any): boolean {
+    if (!tx.data || tx.data === '0x') return false;
+    // ERC20 transfer method signature
+    return tx.data.startsWith('0xa9059cbb');
+  }
+
+  /**
+   * Decode ERC20 transfer data
+   */
+  static decodeERC20Transfer(data: string): { to: string; amount: bigint } | null {
+    try {
+      if (!this.isERC20Transfer({ data })) return null;
+      
+      const to = '0x' + data.slice(34, 74);
+      const amount = BigInt('0x' + data.slice(74));
+      
+      return { to, amount };
+    } catch (error) {
+      console.error('Error decoding ERC20 transfer:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Calculate percentage change
+   */
+  static calculatePercentageChange(oldValue: number, newValue: number): number {
+    if (oldValue === 0) return 0;
+    return ((newValue - oldValue) / oldValue) * 100;
+  }
+
+  /**
+   * Format large numbers with suffixes
+   */
+  static formatLargeNumber(value: number): string {
+    if (value >= 1e9) return `${(value / 1e9).toFixed(2)}B`;
+    if (value >= 1e6) return `${(value / 1e6).toFixed(2)}M`;
+    if (value >= 1e3) return `${(value / 1e3).toFixed(2)}K`;
+    return value.toFixed(2);
+  }
+
+  /**
+   * Convert hex to decimal
+   */
+  static hexToDecimal(hex: string): number {
+    return parseInt(hex, 16);
+  }
+
+  /**
+   * Convert decimal to hex
+   */
+  static decimalToHex(decimal: number): string {
+    return '0x' + decimal.toString(16);
+  }
+
+  /**
+   * Check if string is valid hex
+   */
+  static isValidHex(str: string): boolean {
+    return /^0x[0-9a-fA-F]*$/.test(str);
+  }
+
+  /**
+   * Get network name from chain ID
+   */
+  static getNetworkName(chainId: string): string {
+    const networks: Record<string, string> = {
+      '0x1': 'Ethereum Mainnet',
+      '0x89': 'Polygon',
+      '0x38': 'BSC',
+      '0xaa36a7': 'Sepolia Testnet',
+      '0x5': 'Goerli Testnet'
+    };
+    return networks[chainId] || 'Unknown Network';
+  }
 }
