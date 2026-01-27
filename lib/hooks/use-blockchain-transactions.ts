@@ -79,3 +79,52 @@ export function useBlockchainTransactions(address: string | null) {
     createTransaction
   };
 }
+
+export function useTransactionStatus(txHash: string | null) {
+  const [status, setStatus] = useState<'pending' | 'confirmed' | 'failed' | null>(null);
+  const [confirmations, setConfirmations] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  const checkStatus = useCallback(async () => {
+    if (!txHash) return;
+
+    setLoading(true);
+    try {
+      // Mock implementation - in production, query actual blockchain
+      const mockStatus: 'confirmed' | 'failed' = Math.random() > 0.1 ? 'confirmed' : 'failed';
+      setStatus(mockStatus);
+      setConfirmations(Math.floor(Math.random() * 10) + 1);
+    } catch (err) {
+      console.error('Error checking transaction status:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [txHash]);
+
+  return { status, confirmations, loading, checkStatus };
+}
+
+export function useGasEstimate(to: string | null, value: string) {
+  const [estimate, setEstimate] = useState<{ gasLimit: string; gasPrice: string; totalCost: string } | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const estimateGas = useCallback(async () => {
+    if (!to || !value) return;
+
+    setLoading(true);
+    try {
+      // Mock implementation
+      const gasLimit = '21000';
+      const gasPrice = '25000000000'; // 25 Gwei
+      const totalCost = (BigInt(gasLimit) * BigInt(gasPrice)).toString();
+      
+      setEstimate({ gasLimit, gasPrice, totalCost });
+    } catch (err) {
+      console.error('Error estimating gas:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [to, value]);
+
+  return { estimate, loading, estimateGas };
+}
