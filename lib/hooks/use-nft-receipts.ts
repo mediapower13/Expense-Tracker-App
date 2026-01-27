@@ -77,3 +77,42 @@ export function useNFTReceipts(address: string | null) {
     mintReceipt
   };
 }
+
+export function useReceiptsByCategory(receipts: NFTReceipt[]) {
+  const groupedReceipts = receipts.reduce((acc, receipt) => {
+    const category = receipt.metadata.category || 'Uncategorized';
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(receipt);
+    return acc;
+  }, {} as Record<string, NFTReceipt[]>);
+
+  return groupedReceipts;
+}
+
+export function useReceiptStats(receipts: NFTReceipt[]) {
+  const stats = {
+    totalReceipts: receipts.length,
+    totalAmount: receipts.reduce((sum, r) => sum + parseFloat(r.metadata.amount || '0'), 0),
+    categories: new Set(receipts.map(r => r.metadata.category)).size,
+    latestReceipt: receipts.length > 0 ? receipts[receipts.length - 1] : null,
+    oldestReceipt: receipts.length > 0 ? receipts[0] : null
+  };
+
+  return stats;
+}
+
+export function useSearchReceipts(receipts: NFTReceipt[], searchTerm: string) {
+  const filtered = receipts.filter(receipt => {
+    const term = searchTerm.toLowerCase();
+    return (
+      receipt.metadata.description?.toLowerCase().includes(term) ||
+      receipt.metadata.category?.toLowerCase().includes(term) ||
+      receipt.metadata.merchant?.toLowerCase().includes(term) ||
+      receipt.tokenId.includes(term)
+    );
+  });
+
+  return filtered;
+}
