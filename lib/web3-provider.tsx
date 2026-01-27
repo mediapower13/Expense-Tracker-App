@@ -50,3 +50,23 @@ export function Web3Guard({ children, fallback }: { children: ReactNode; fallbac
 
   return <>{children}</>;
 }
+
+export function useWalletAddress(): string | null {
+  const web3 = useWeb3Safe();
+  return web3?.wallet.address || null;
+}
+
+export function useChainId(): string | null {
+  const web3 = useWeb3Safe();
+  return web3?.wallet.chainId || null;
+}
+
+export function useIsConnected(): boolean {
+  const web3 = useWeb3Safe();
+  return web3?.wallet.isConnected || false;
+}
+
+export function useWalletBalance(): string {
+  const web3 = useWeb3Safe();
+  return web3?.wallet.balance || '0';
+}
