@@ -133,4 +133,34 @@ export class SmartContractHelper {
   static decodeParameters(types: string[], data: string): any {
     return ethers.AbiCoder.defaultAbiCoder().decode(types, data);
   }
+
+  static async getBalance(provider: ethers.Provider, address: string): Promise<bigint> {
+    return await provider.getBalance(address);
+  }
+
+  static async getNonce(provider: ethers.Provider, address: string): Promise<number> {
+    return await provider.getTransactionCount(address);
+  }
+
+  static keccak256(data: string): string {
+    return ethers.keccak256(ethers.toUtf8Bytes(data));
+  }
+
+  static solidityKeccak256(types: string[], values: any[]): string {
+    return ethers.solidityPackedKeccak256(types, values);
+  }
+
+  static recoverSigner(message: string, signature: string): string {
+    return ethers.verifyMessage(message, signature);
+  }
+
+  static async estimateGasWithBuffer(
+    provider: ethers.Provider,
+    transaction: any,
+    bufferPercent: number = 20
+  ): Promise<bigint> {
+    const estimated = await provider.estimateGas(transaction);
+    const buffer = (estimated * BigInt(bufferPercent)) / BigInt(100);
+    return estimated + buffer;
+  }
 }
