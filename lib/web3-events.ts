@@ -57,7 +57,8 @@ export class Web3Events {
   async getEventsBySignature(
     contractAddress: string,
     eventSignature: string,
-    fromBlock: number = 0
+    fromBlock: number = 0,
+    abi?: any[]
   ): Promise<ethers.Log[]> {
     const topic = ethers.id(eventSignature);
     
@@ -175,7 +176,7 @@ export class Web3Events {
     eventSignature: string,
     startTime: number,
     endTime: number
-  ): Promise<ParsedEvent[]> {
+  ): Promise<ethers.Log[]> {
     const currentBlock = await this.getBlockNumber();
     const avgBlockTime = 12; // seconds
     
@@ -185,7 +186,7 @@ export class Web3Events {
     const events = await this.getEventsBySignature(contractAddress, eventSignature, fromBlock);
     
     // Filter by actual timestamp
-    const filteredEvents: ParsedEvent[] = [];
+    const filteredEvents: ethers.Log[] = [];
     for (const event of events) {
       const block = await this.getBlock(event.blockNumber);
       if (block && block.timestamp >= startTime && block.timestamp <= endTime) {
@@ -201,7 +202,7 @@ export class Web3Events {
    */
   async batchGetEvents(
     requests: Array<{ address: string; signature: string; fromBlock: number }>
-  ): Promise<ParsedEvent[][]> {
+  ): Promise<ethers.Log[][]> {
     const promises = requests.map(req => 
       this.getEventsBySignature(req.address, req.signature, req.fromBlock)
     );
