@@ -180,4 +180,77 @@ export class Web3Storage {
       return false;
     }
   }
+
+  /**
+   * Clear all Web3 related storage
+   */
+  static clearAllWeb3Storage(): void {
+    if (typeof window === 'undefined') return;
+    
+    try {
+      localStorage.removeItem(this.WALLET_KEY);
+      localStorage.removeItem(this.TX_CACHE_KEY);
+      localStorage.removeItem(this.SETTINGS_KEY);
+      localStorage.removeItem('web3_favorites');
+    } catch (error) {
+      console.error('Failed to clear Web3 storage:', error);
+    }
+  }
+
+  /**
+   * Export all Web3 data
+   */
+  static exportData(): string | null {
+    if (typeof window === 'undefined') return null;
+    
+    try {
+      const data = {
+        wallet: this.getWallet(),
+        settings: this.getSettings(),
+        favorites: this.getFavoriteAddresses(),
+        timestamp: Date.now()
+      };
+      return JSON.stringify(data, null, 2);
+    } catch (error) {
+      console.error('Failed to export data:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Import Web3 data
+   */
+  static importData(jsonData: string): boolean {
+    if (typeof window === 'undefined') return false;
+    
+    try {
+      const data = JSON.parse(jsonData);
+      
+      if (data.wallet) this.saveWallet(data.wallet);
+      if (data.settings) this.saveSettings(data.settings);
+      if (data.favorites) {
+        localStorage.setItem('web3_favorites', JSON.stringify(data.favorites));
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('Failed to import data:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Get storage quota info
+   */
+  static getQuotaInfo(): { used: number; available: number; percentage: number } {
+    const used = this.getStorageSize();
+    const available = 5 * 1024 * 1024; // Typical 5MB limit
+    
+    return {
+      used,
+      available,
+      percentage: (used / available) * 100
+    };
+  }
 }
+
