@@ -195,4 +195,67 @@ export class TransactionBuilder {
       errors
     };
   }
+
+  /**
+   * Create batch transfer transaction
+   */
+  static createBatchTransfer(recipients: string[], amounts: string[]): TransactionBuilder {
+    if (recipients.length !== amounts.length) {
+      throw new Error('Recipients and amounts arrays must have the same length');
+    }
+    
+    // This is a placeholder - would need a batch transfer contract
+    const builder = new TransactionBuilder();
+    return builder;
+  }
+
+  /**
+   * Estimate transaction cost
+   */
+  estimateCost(gasPrice: bigint): { gasCost: bigint; total: bigint } {
+    const gasLimit = this.params.gasLimit || 21000n;
+    const gasCost = gasLimit * gasPrice;
+    const value = this.params.value || 0n;
+    
+    return {
+      gasCost,
+      total: gasCost + value
+    };
+  }
+
+  /**
+   * Set max priority fee per gas (EIP-1559)
+   */
+  setMaxPriorityFee(fee: bigint): this {
+    this.params.gasPrice = fee;
+    return this;
+  }
+
+  /**
+   * Create NFT transfer transaction
+   */
+  static createNFTTransfer(
+    nftAddress: string,
+    tokenId: number,
+    from: string,
+    to: string
+  ): TransactionBuilder {
+    // ERC-721 transferFrom function
+    const iface = new ethers.Interface([
+      'function transferFrom(address from, address to, uint256 tokenId)'
+    ]);
+    const data = iface.encodeFunctionData('transferFrom', [from, to, tokenId]);
+    
+    return new TransactionBuilder()
+      .setRecipient(nftAddress)
+      .setData(data);
+  }
+
+  /**
+   * Check if transaction is contract interaction
+   */
+  isContractInteraction(): boolean {
+    return !!this.params.data && this.params.data !== '0x';
+  }
 }
+
