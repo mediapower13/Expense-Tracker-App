@@ -166,4 +166,79 @@ export class Web3Events {
     const events = await this.getEventsBySignature(contractAddress, eventSignature, fromBlock);
     return events.length;
   }
+
+  /**
+   * Get events within a time range
+   */
+  async getEventsByTimeRange(
+    contractAddress: string,
+    eventSignature: string,
+    startTime: number,
+    endTime: number
+  ): Promise<ParsedEvent[]> {
+    const currentBlock = await this.getBlockNumber();
+    const avgBlockTime = 12; // seconds
+    
+    const blocksBack = Math.floor((Date.now() / 1000 - startTime) / avgBlockTime);
+    const fromBlock = Math.max(0, currentBlock - blocksBack);
+    
+    const events = await this.getEventsBySignature(contractAddress, eventSignature, fromBlock);
+    
+    // Filter by actual timestamp
+    const filteredEvents: ParsedEvent[] = [];
+    for (const event of events) {
+      const block = await this.getBlock(event.blockNumber);
+      if (block && block.timestamp >= startTime && block.timestamp <= endTime) {
+        filteredEvents.push(event);
+      }
+    }
+    
+    return filteredEvents;
+  }
+
+  /**
+   * Batch get multiple events
+   */
+  async batchGetEvents(
+    requests: Array<{ address: string; signature: string; fromBlock: number }>
+  ): Promise<ParsedEvent[][]> {
+    const promises = requests.map(req => 
+      this.getEventsBySignature(req.address, req.signature, req.fromBlock)
+    );
+    return await Promise.all(promises);
+  }
+
+  /**
+   * Get unique participants from events
+   */
+  async getEventParticipants(events: ParsedEvent[]): Promise<Set<string>> {
+    const participants = new Set<string>();
+    
+    for (const event of events) {
+      if (event.args) {
+        for (const arg of Object.values(event.args)) {
+          if (typeof arg === 'string' && ethers.isAddress(arg)) {
+            participants.add(arg.toLowerCase());
+          }
+        }
+      }
+    }
+    
+    return participants;
+  }
+
+  /**
+   * Clean up all listeners
+   */
+  removeAllListeners(): void {
+    this.listeners.clear();
+  }
+
+  /**
+   * Get active listener count
+   */
+  getListenerCount(): number {
+    return this.listeners.size;
+  }
 }
+
