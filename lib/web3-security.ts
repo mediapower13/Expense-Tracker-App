@@ -245,7 +245,7 @@ export class Web3Security {
   }
 
   static validateTokenAddress(address: string, knownTokens: string[]): SecurityCheck {
-    if (!this.validateAddress(address)) {
+    if (!ethers.isAddress(address)) {
       return {
         passed: false,
         level: 'critical',
