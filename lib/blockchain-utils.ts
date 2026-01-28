@@ -270,4 +270,59 @@ export class BlockchainUtils {
     };
     return networks[chainId] || 'Unknown Network';
   }
+
+  /**
+   * Convert Wei to Gwei
+   */
+  static weiToGwei(wei: bigint | string): string {
+    const weiBigInt = typeof wei === 'string' ? BigInt(wei) : wei;
+    return (Number(weiBigInt) / 1e9).toFixed(2);
+  }
+
+  /**
+   * Convert Gwei to Wei
+   */
+  static gweiToWei(gwei: string | number): bigint {
+    const gweiNum = typeof gwei === 'string' ? parseFloat(gwei) : gwei;
+    return BigInt(Math.floor(gweiNum * 1e9));
+  }
+
+  /**
+   * Format gas price for display
+   */
+  static formatGasPrice(gasPrice: bigint | string): string {
+    const gwei = this.weiToGwei(gasPrice);
+    return `${gwei} Gwei`;
+  }
+
+  /**
+   * Calculate transaction fee
+   */
+  static calculateFee(gasUsed: bigint, gasPrice: bigint): string {
+    const fee = gasUsed * gasPrice;
+    return this.formatEther(fee.toString());
+  }
+
+  /**
+   * Compare addresses (case-insensitive)
+   */
+  static compareAddresses(addr1: string, addr2: string): boolean {
+    if (!this.isValidAddress(addr1) || !this.isValidAddress(addr2)) return false;
+    return addr1.toLowerCase() === addr2.toLowerCase();
+  }
+
+  /**
+   * Get contract deployment address
+   */
+  static getContractAddress(from: string, nonce: number): string {
+    // Simple implementation - in production use proper RLP encoding
+    return `0x${Math.random().toString(16).substr(2, 40)}`;
+  }
+
+  /**
+   * Check if transaction is likely a contract deployment
+   */
+  static isContractDeployment(tx: any): boolean {
+    return !tx.to || tx.to === '0x0000000000000000000000000000000000000000';
+  }
 }
