@@ -157,4 +157,41 @@ export class Web3Analytics {
       total: monthlyGas.toFixed(6)
     };
   }
+
+  static getTransactionTrend(transactions: any[], days: number = 7): { direction: 'up' | 'down' | 'stable'; percentage: number } {
+    if (transactions.length < 2) return { direction: 'stable', percentage: 0 };
+
+    const now = Date.now();
+    const cutoff = now - (days * 24 * 60 * 60 * 1000);
+    const recent = transactions.filter(tx => (tx.timestamp * 1000) > cutoff);
+    
+    const firstHalf = recent.slice(0, Math.floor(recent.length / 2)).length;
+    const secondHalf = recent.slice(Math.floor(recent.length / 2)).length;
+    
+    if (firstHalf === 0) return { direction: 'stable', percentage: 0 };
+    
+    const change = ((secondHalf - firstHalf) / firstHalf) * 100;
+    const direction = change > 5 ? 'up' : change < -5 ? 'down' : 'stable';
+    
+    return { direction, percentage: Math.abs(change) };
+  }
+
+  static getMostActiveHours(transactions: any[]): Record<number, number> {
+    const hourCounts: Record<number, number> = {};
+    
+    transactions.forEach(tx => {
+      const hour = new Date(tx.timestamp * 1000).getHours();
+      hourCounts[hour] = (hourCounts[hour] || 0) + 1;
+    });
+    
+    return hourCounts;
+  }
+
+  static getAverageConfirmationTime(transactions: any[]): number {
+    const confirmed = transactions.filter(tx => tx.status === 'confirmed' && tx.confirmationTime);
+    if (confirmed.length === 0) return 0;
+    
+    const totalTime = confirmed.reduce((sum, tx) => sum + (tx.confirmationTime || 0), 0);
+    return totalTime / confirmed.length;
+  }
 }
