@@ -243,4 +243,68 @@ export class Web3Security {
       message: 'Chain ID is supported'
     };
   }
+
+  static validateTokenAddress(address: string, knownTokens: string[]): SecurityCheck {
+    if (!this.validateAddress(address)) {
+      return {
+        passed: false,
+        level: 'critical',
+        message: 'Invalid token address'
+      };
+    }
+
+    if (!knownTokens.includes(address.toLowerCase())) {
+      return {
+        passed: false,
+        level: 'warning',
+        message: 'Unknown token - proceed with caution'
+      };
+    }
+
+    return {
+      passed: true,
+      level: 'info',
+      message: 'Token address verified'
+    };
+  }
+
+  static checkContractInteraction(to: string, data: string): SecurityCheck {
+    if (data && data !== '0x' && data.length > 10) {
+      return {
+        passed: true,
+        level: 'info',
+        message: 'Contract interaction detected - review carefully'
+      };
+    }
+
+    return {
+      passed: true,
+      level: 'info',
+      message: 'Simple transfer'
+    };
+  }
+
+  static validateNonce(nonce: number, expectedNonce: number): SecurityCheck {
+    if (nonce < expectedNonce) {
+      return {
+        passed: false,
+        level: 'critical',
+        message: 'Nonce is too low - transaction will fail'
+      };
+    }
+
+    if (nonce > expectedNonce + 5) {
+      return {
+        passed: false,
+        level: 'warning',
+        message: 'Nonce is unusually high - check pending transactions'
+      };
+    }
+
+    return {
+      passed: true,
+      level: 'info',
+      message: 'Nonce is valid'
+    };
+  }
 }
