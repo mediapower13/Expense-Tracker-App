@@ -107,6 +107,67 @@ export class Web3Cache {
     this.set(key, data, ttl);
     return data;
   }
+
+  /**
+   * Set default TTL
+   */
+  setDefaultTTL(ttl: number): void {
+    if (ttl > 0) {
+      this.defaultTTL = ttl;
+    }
+  }
+
+  /**
+   * Get cache statistics
+   */
+  getStats(): { size: number; maxSize: number; hitRate: number } {
+    return {
+      size: this.cache.size,
+      maxSize: this.maxSize,
+      hitRate: 0 // Could be tracked with hit/miss counters
+    };
+  }
+
+  /**
+   * Invalidate cache entries matching pattern
+   */
+  invalidatePattern(pattern: RegExp): number {
+    let count = 0;
+    for (const key of this.cache.keys()) {
+      if (pattern.test(key)) {
+        this.cache.delete(key);
+        count++;
+      }
+    }
+    return count;
+  }
+
+  /**
+   * Get all cache keys
+   */
+  keys(): string[] {
+    return Array.from(this.cache.keys());
+  }
+
+  /**
+   * Check cache health
+   */
+  healthCheck(): { healthy: boolean; expired: number; total: number } {
+    const now = Date.now();
+    let expired = 0;
+
+    for (const [key, entry] of this.cache.entries()) {
+      if (now - entry.timestamp > entry.ttl) {
+        expired++;
+      }
+    }
+
+    return {
+      healthy: expired < this.cache.size * 0.3,
+      expired,
+      total: this.cache.size
+    };
+  }
 }
 
 // Singleton instance
